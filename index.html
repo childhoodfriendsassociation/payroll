@@ -479,7 +479,7 @@
             <div class="grid-row">
                 <div class="form-group">
                     <label for="basicDaysInput"><i class="fa-solid fa-business-time"></i> Basic Duty Days Worked:</label>
-                    <input type="number" id="basicDaysInput" placeholder="Enter days" oninput="updateAutoOvertimeDays()">
+                    <input type="number" id="basicDaysInput" placeholder="Enter days" oninput="syncWorkingDaysToOT()">
                 </div>
                 <div class="form-group">
                     <label for="siteAllowanceInput"><i class="fa-solid fa-money-bill-wave"></i> Monthly Site Allowance (Fixed):</label>
@@ -493,7 +493,7 @@
 
             <div class="grid-row">
                 <div class="form-group">
-                    <label for="otDays"><i class="fa-solid fa-business-time"></i> Basic Overtime Days (Auto):</label>
+                    <label for="otDays"><i class="fa-solid fa-business-time"></i> Basic Overtime Days:</label>
                     <input type="number" step="any" id="otDays" placeholder="e.g. 2">
                 </div>
                 <div class="form-group">
@@ -712,16 +712,17 @@
 
         totalWorkingDaysInMonth = totalDays - sundayCount;
         document.getElementById('basicDaysInput').value = totalWorkingDaysInMonth;
-        document.getElementById('badgeText').innerHTML = `<i class="fa-solid fa-circle-info"></i> Total Days in Month: <strong>${totalDays}</strong> | Standard Working Days (Excl. Sundays): <strong>${totalWorkingDaysInMonth}</strong>`;
+        
+        // Sync working days to OT days automatically
+        document.getElementById('otDays').value = totalWorkingDaysInMonth;
 
-        // Update Overtime days automatically when working days load
-        updateAutoOvertimeDays();
+        document.getElementById('badgeText').innerHTML = `<i class="fa-solid fa-circle-info"></i> Total Days in Month: <strong>${totalDays}</strong> | Standard Working Days (Excl. Sundays): <strong>${totalWorkingDaysInMonth}</strong>`;
     }
 
-    function updateAutoOvertimeDays() {
-        const basicDays = parseFloat(document.getElementById('basicDaysInput').value) || 0;
-        const calculatedOTDays = (342 / 26) * basicDays;
-        document.getElementById('otDays').value = calculatedOTDays.toFixed(2);
+    // Function to sync Basic Duty Days to Basic Overtime Days on input change
+    function syncWorkingDaysToOT() {
+        const basicDays = document.getElementById('basicDaysInput').value;
+        document.getElementById('otDays').value = basicDays;
     }
 
     function calculateSalary() {
@@ -771,9 +772,9 @@
         const basicSalary = parseFloat(document.getElementById('basicSalary').value) || 0;
         const grossSalary = parseFloat(document.getElementById('grossSalary').value) || basicSalary;
         const years = parseFloat(document.getElementById('years').value) || 0;
-        const reason = document.getElementById('reason').value;
+        const reason = document.getElementById('reason.value') || document.getElementById('reason').value;
         const leaveDays = parseFloat(document.getElementById('leaveDays').value) || 0;
-        const noticeMonths = parseFloat(document.getElementById('noticeMonths' ).value) || 0;
+        const noticeMonths = parseFloat(document.getElementById('noticeMonths').value) || 0;
 
         let indemnity = 0;
         if (years >= 1) {
