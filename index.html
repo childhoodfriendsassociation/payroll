@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Payroll & Salary Dashboard</title>
+    <!-- Google Fonts: Times New Roman -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #d32f2f;
+            --primary-dark: #b71c1c;
+            --bg-color: #f4f6f9;
+            --card-bg: #ffffff;
+            --text-main: #2d3748;
+            --text-muted: #718096;
+            --border-color: #cbd5e1;
+        }
+
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 15px;
+        }
+
+        .dashboard-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Top Bar Info */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--card-bg);
+            padding: 12px 15px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: var(--text-muted);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .top-bar div {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .top-bar i {
+            color: var(--primary);
+        }
+
+        /* Main Card */
+        .main-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+        }
+
+        @media(min-width: 600px) {
+            .main-card {
+                padding: 30px;
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 15px;
+        }
+
+        h2 {
+            color: var(--primary);
+            margin: 0;
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        @media(min-width: 600px) {
+            h2 { font-size: 26px; }
+        }
+
+        /* Grid Layout */
+        .grid-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        @media(min-width: 600px) {
+            .grid-row {
+                grid-template-columns: 1fr 1fr;
+                gap: 20px;
+            }
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            font-size: 14px;
+            color: #4a5568;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px 14px;
+            box-sizing: border-box;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.3s;
+            background: #fff;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.1);
+        }
+
+        .info-badge {
+            background: #fff5f5;
+            border-left: 4px solid var(--primary);
+            padding: 10px 12px;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: #c53030;
+        }
+
+        .btn-container {
+            display: flex;
+            gap: 10px;
+            flex-direction: column;
+        }
+
+        @media(min-width: 500px) {
+            .btn-container {
+                flex-direction: row;
+            }
+        }
+
+        .calc-btn, .print-btn {
+            padding: 12px;
+            width: 100%;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-family: inherit;
+        }
+
+        .calc-btn {
+            background: linear-gradient(135deg, #d32f2f, #b71c1c);
+            color: white;
+            box-shadow: 0 4px 12px rgba(211, 47, 47, 0.3);
+        }
+
+        .print-btn {
+            background: #2b6cb0;
+            color: white;
+            box-shadow: 0 4px 12px rgba(43, 108, 176, 0.3);
+            display: none;
+        }
+
+        .calc-btn:hover, .print-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Result Section */
+        .result-box {
+            margin-top: 25px;
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            border-radius: 12px;
+            display: none;
+        }
+
+        /* Professional PaySlip Styled Header */
+        .payslip-header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #cbd5e1;
+            background: linear-gradient(to bottom, #f1f5f9, transparent);
+            border-radius: 8px 8px 0 0;
+            padding-top: 10px;
+        }
+
+        .payslip-header h3 {
+            margin: 0;
+            color: #1e293b;
+            font-size: 20px;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        .payslip-header p {
+            margin: 4px 0 0 0;
+            color: var(--text-muted);
+            font-size: 13px;
+            font-style: italic;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 14px;
+            gap: 10px;
+        }
+
+        .result-item span:first-child {
+            color: var(--text-muted);
+        }
+
+        .result-item span:last-child {
+            font-weight: 600;
+            color: var(--text-main);
+            text-align: right;
+        }
+
+        .total-row {
+            font-weight: 700 !important;
+            font-size: 16px !important;
+            color: var(--primary) !important;
+            border-top: 2px dashed var(--border-color);
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+
+        /* Disclaimer Footer */
+        .disclaimer-footer {
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 1px solid #e2e8f0;
+            font-size: 11px;
+            color: #718096;
+            text-align: center;
+            font-style: italic;
+            line-height: 1.4;
+        }
+
+        /* Page Footer Disclaimer */
+        .page-footer-disclaimer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #718096;
+            font-style: italic;
+        }
+
+        /* Print Styling - A5 Landscape */
+        @media print {
+            @page {
+                size: A5 landscape;
+                margin: 10mm;
+            }
+
+            body {
+                background: white;
+                padding: 0;
+            }
+            .top-bar, .form-group, .info-badge, .calc-btn, .print-btn, .page-footer-disclaimer, .header {
+                display: none !important;
+            }
+            .dashboard-container {
+                max-width: 100%;
+                width: 100%;
+                margin: 0;
+            }
+            .main-card {
+                box-shadow: none;
+                border: none;
+                padding: 0;
+            }
+            .result-box {
+                display: block !important;
+                background: white !important;
+                border: 1px solid #333 !important;
+                border-radius: 0 !important;
+                padding: 15px !important;
+                margin-top: 0 !important;
+            }
+            .payslip-header {
+                border-bottom: 2px solid #333 !important;
+                background: none !important;
+                padding-bottom: 8px;
+                margin-bottom: 12px;
+            }
+            .payslip-header h3 {
+                color: #000 !important;
+                font-size: 18px;
+            }
+            .payslip-header p {
+                font-size: 11px;
+            }
+            .result-item {
+                border-bottom: 1px solid #e2e8f0;
+                padding-bottom: 4px;
+                margin-bottom: 6px;
+                font-size: 13px;
+            }
+            .total-row {
+                border-top: 2px solid #000 !important;
+                color: #000 !important;
+            }
+            .disclaimer-footer {
+                border-top: 1px solid #333 !important;
+                color: #333 !important;
+                display: block !important;
+                font-size: 10px;
+                margin-top: 10px;
+                padding-top: 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="dashboard-container">
+    <!-- Top Live Widget -->
+    <div class="top-bar">
+        <div><i class="fa-solid fa-location-dot"></i> <span id="locationText">Dubai, UAE</span></div>
+        <div><i class="fa-solid fa-calendar-days"></i> <span id="currentDate">--</span></div>
+        <div><i class="fa-solid fa-clock"></i> <span id="currentTime">--</span></div>
+    </div>
+
+    <!-- Main Content Card -->
+    <div class="main-card">
+        <div class="header">
+            <h2>Smart Payroll System</h2>
+        </div>
+
+        <!-- Month & Year Selection -->
+        <div class="grid-row">
+            <div class="form-group">
+                <label for="selectMonth"><i class="fa-solid fa-calendar"></i> Select Month:</label>
+                <select id="selectMonth" onchange="updateMonthInfo()">
+                    <!-- Populated dynamically via JS -->
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="selectYear"><i class="fa-solid fa-calendar-alt"></i> Select Year:</label>
+                <input type="number" id="selectYear" value="" placeholder="e.g. 2026" onchange="updateMonthInfo()">
+            </div>
+        </div>
+
+        <!-- Working Days & Site Allowance Inputs -->
+        <div class="grid-row">
+            <div class="form-group">
+                <label for="basicDaysInput"><i class="fa-solid fa-business-time"></i> Basic Duty Days Worked:</label>
+                <input type="number" id="basicDaysInput" value="" placeholder="Enter days">
+            </div>
+
+            <div class="form-group">
+                <label for="siteAllowanceInput"><i class="fa-solid fa-money-bill-wave"></i> Monthly Site Allowance (Fixed):</label>
+                <input type="number" id="siteAllowanceInput" value="" placeholder="e.g. 200">
+            </div>
+        </div>
+
+        <!-- Auto Info Badge -->
+        <div class="info-badge" id="autoInfoBadge">
+            <span id="badgeText"><i class="fa-solid fa-circle-info"></i> Please select month and year to view working days info.</span>
+        </div>
+
+        <!-- Inputs for OT and Holidays -->
+        <div class="grid-row">
+            <div class="form-group">
+                <label for="otDays"><i class="fa-solid fa-business-time"></i> Basic Overtime Days:</label>
+                <input type="number" step="any" id="otDays" value="" placeholder="e.g. 5">
+            </div>
+
+            <div class="form-group">
+                <label for="holidays"><i class="fa-solid fa-umbrella-beach"></i> Public Holiday / Week-off Work:</label>
+                <input type="number" step="any" id="holidays" value="" placeholder="e.g. 2">
+            </div>
+        </div>
+
+        <div class="btn-container">
+            <button class="calc-btn" onclick="calculateSalary()"><i class="fa-solid fa-calculator"></i> Calculate Salary</button>
+            <button class="print-btn" id="printBtn" onclick="window.print()"><i class="fa-solid fa-print"></i> Print Pay Slip</button>
+        </div>
+
+        <!-- Result Breakdown Box -->
+        <div class="result-box" id="resultBox">
+            <!-- Unofficial Styled PaySlip Header -->
+            <div class="payslip-header">
+                <h3><i class="fa-solid fa-file-invoice-dollar"></i> UNOFFICIAL SALARY STATEMENT</h3>
+                <p>Monthly Earnings & Allowance Breakdown</p>
+            </div>
+
+            <div class="result-item">
+                <span>Selected Month & Year:</span>
+                <span id="resMonthYear">--</span>
+            </div>
+            <div class="result-item">
+                <span>Earned Basic Salary:</span>
+                <span id="resBasic">0.00 د.إ</span>
+            </div>
+            <div class="result-item">
+                <span>Earned Allowance:</span>
+                <span id="resAllowance">0.00 د.إ</span>
+            </div>
+            <div class="result-item">
+                <span>Earned Site Allowance:</span>
+                <span id="resSiteAllowance">0.00 د.إ</span>
+            </div>
+            <div class="result-item">
+                <span>Overtime Amount:</span>
+                <span id="resOT">0.00 د.إ</span>
+            </div>
+            <div class="result-item">
+                <span>Public Holiday / Week-off Amount:</span>
+                <span id="resHoliday">0.00 د.إ</span>
+            </div>
+            <div class="result-item total-row">
+                <span>Total Payable Salary:</span>
+                <span id="resTotal">0.00 د.إ</span>
+            </div>
+            
+            <!-- Disclaimer Footer -->
+            <div class="disclaimer-footer">
+                * Note: This is an unofficial calculation for personal reference only. No claims can be made to the company based on this statement.
+            </div>
+        </div>
+    </div>
+
+    <!-- Page Footer Disclaimer -->
+    <div class="page-footer-disclaimer">
+        * Unofficial personal estimate. Not valid for company claims.
+    </div>
+</div>
+
+<script>
+    let totalWorkingDaysInMonth = 26;
+
+    const monthsData = [
+        "January", "February", "March", "April", "May", "June", 
+        "July", "August", "September", "October", "November", "December"
+    ];
+
+    function populateMonths() {
+        const select = document.getElementById('selectMonth');
+        select.innerHTML = "<option value='' disabled selected>Select Month</option>";
+        
+        monthsData.forEach((name, index) => {
+            const opt = document.createElement('option');
+            opt.value = index;
+            opt.textContent = name;
+            select.appendChild(opt);
+        });
+    }
+
+    function updateLiveClock() {
+        const now = new Date();
+        document.getElementById('currentTime').innerText = now.toLocaleTimeString();
+        const options = { year: 'numeric', month: 'short', day: 'numeric', weekday: 'short' };
+        document.getElementById('currentDate').innerText = now.toLocaleDateString('en-US', options);
+    }
+    setInterval(updateLiveClock, 1000);
+    updateLiveClock();
+
+    window.onload = function() {
+        populateMonths();
+    };
+
+    function updateMonthInfo() {
+        const yearInput = document.getElementById('selectYear').value;
+        const monthSelect = document.getElementById('selectMonth').value;
+
+        if (yearInput === "" || monthSelect === "") {
+            document.getElementById('badgeText').innerHTML = `<i class="fa-solid fa-circle-info"></i> Please select month and year to view working days info.`;
+            return;
+        }
+
+        const year = parseInt(yearInput);
+        const month = parseInt(monthSelect);
+
+        const totalDays = new Date(year, month + 1, 0).getDate();
+        
+        let sundayCount = 0;
+        for (let day = 1; day <= totalDays; day++) {
+            const dateObj = new Date(year, month, day);
+            if (dateObj.getDay() === 0) {
+                sundayCount++;
+            }
+        }
+
+        totalWorkingDaysInMonth = totalDays - sundayCount;
+        document.getElementById('basicDaysInput').value = totalWorkingDaysInMonth;
+        document.getElementById('badgeText').innerHTML = `<i class="fa-solid fa-circle-info"></i> Total Days in Month: <strong>${totalDays}</strong> | Standard Working Days (Excl. Sundays): <strong>${totalWorkingDaysInMonth}</strong>`;
+    }
+
+    function calculateSalary() {
+        const actualWorkedDays = parseFloat(document.getElementById('basicDaysInput').value) || 0;
+        const monthlySiteAllowance = parseFloat(document.getElementById('siteAllowanceInput').value) || 0;
+        
+        const earnedBasic = (1200 / (totalWorkingDaysInMonth || 26)) * actualWorkedDays;
+        const earnedAllowance = (720 / (totalWorkingDaysInMonth || 26)) * actualWorkedDays;
+        const earnedSiteAllowance = (monthlySiteAllowance / (totalWorkingDaysInMonth || 26)) * actualWorkedDays;
+        
+        const otDays = parseFloat(document.getElementById('otDays').value) || 0;
+        const otRatePerDay = 342 / 26; 
+        const totalOT = otRatePerDay * otDays;
+
+        const holidays = parseFloat(document.getElementById('holidays').value) || 0;
+        const holidayRatePerDay = 73.25;
+        const totalHolidayPay = holidays * holidayRatePerDay;
+
+        const monthSelect = document.getElementById('selectMonth');
+        const year = document.getElementById('selectYear').value;
+
+        if (monthSelect.value === "" || year === "") {
+            alert("Please select both Month and Year first!");
+            return;
+        }
+
+        const monthName = monthsData[monthSelect.value];
+        const grandTotal = earnedBasic + earnedAllowance + earnedSiteAllowance + totalOT + totalHolidayPay;
+
+        document.getElementById('resMonthYear').innerText = `${monthName} ${year}`;
+        document.getElementById('resBasic').innerText = earnedBasic.toFixed(2) + ' د.إ';
+        document.getElementById('resAllowance').innerText = earnedAllowance.toFixed(2) + ' د.إ';
+        document.getElementById('resSiteAllowance').innerText = earnedSiteAllowance.toFixed(2) + ' د.إ';
+        document.getElementById('resOT').innerText = totalOT.toFixed(2) + ' د.إ';
+        document.getElementById('resHoliday').innerText = totalHolidayPay.toFixed(2) + ' د.إ';
+        document.getElementById('resTotal').innerText = grandTotal.toFixed(2) + ' د.إ';
+
+        document.getElementById('resultBox').style.display = 'block';
+        document.getElementById('printBtn').style.display = 'flex';
+    }
+</script>
+
+</body>
+</html>

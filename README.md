@@ -1,2 +1,0 @@
-# payroll
-Salary Calculator
