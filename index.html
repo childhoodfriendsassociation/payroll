@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced Payroll & Salary Dashboard</title>
-    <!-- Google Fonts: Times New Roman -->
+    <title>Comprehensive Payroll & Settlement Dashboard</title>
+    <!-- Google Fonts & FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
@@ -23,7 +23,7 @@
             background-color: var(--bg-color);
             color: var(--text-main);
             margin: 0;
-            padding: 15px;
+            padding: 10px;
         }
 
         .dashboard-container {
@@ -31,38 +31,83 @@
             margin: 0 auto;
         }
 
-        /* Top Bar Info */
+        /* Top Bar Info - Mobile Friendly */
         .top-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
             background: var(--card-bg);
-            padding: 12px 15px;
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            margin-bottom: 20px;
-            font-size: 14px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 12px;
+            font-size: 13px;
             color: var(--text-muted);
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 8px;
         }
 
         .top-bar div {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 5px;
         }
 
         .top-bar i {
             color: var(--primary);
         }
 
+        /* Navigation Menu Bar / Dropdown Style */
+        .nav-bar {
+            background: var(--card-bg);
+            padding: 10px 12px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .nav-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-dropdown-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            justify-content: flex-end;
+        }
+
+        .nav-dropdown-group select {
+            width: 100%;
+            max-width: 220px;
+            padding: 8px 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: bold;
+            color: var(--primary);
+            background: #fff;
+            cursor: pointer;
+        }
+
         /* Main Card */
         .main-card {
             background: var(--card-bg);
-            padding: 20px;
-            border-radius: 16px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+            padding: 15px;
+            border-radius: 14px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.06);
         }
 
         @media(min-width: 600px) {
@@ -73,15 +118,15 @@
 
         .header {
             text-align: center;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             border-bottom: 2px solid #e2e8f0;
-            padding-bottom: 15px;
+            padding-bottom: 12px;
         }
 
         h2 {
             color: var(--primary);
             margin: 0;
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 700;
             letter-spacing: 0.5px;
         }
@@ -94,7 +139,7 @@
         .grid-row {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 15px;
+            gap: 12px;
         }
 
         @media(min-width: 600px) {
@@ -105,20 +150,24 @@
         }
 
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
 
         label {
             display: block;
-            margin-bottom: 6px;
+            margin-bottom: 5px;
             font-weight: 500;
-            font-size: 14px;
+            font-size: 13px;
             color: #4a5568;
+        }
+
+        @media(min-width: 600px) {
+            label { font-size: 14px; }
         }
 
         input, select {
             width: 100%;
-            padding: 10px 14px;
+            padding: 10px 12px;
             box-sizing: border-box;
             border: 1px solid var(--border-color);
             border-radius: 8px;
@@ -137,17 +186,19 @@
         .info-badge {
             background: #fff5f5;
             border-left: 4px solid var(--primary);
-            padding: 10px 12px;
+            padding: 10px;
             border-radius: 0 8px 8px 0;
             margin-bottom: 15px;
-            font-size: 14px;
+            font-size: 13px;
             color: #c53030;
+            line-height: 1.4;
         }
 
         .btn-container {
             display: flex;
             gap: 10px;
             flex-direction: column;
+            margin-top: 15px;
         }
 
         @media(min-width: 500px) {
@@ -191,41 +242,49 @@
 
         /* Result Section */
         .result-box {
-            margin-top: 25px;
+            margin-top: 20px;
             background: #f8fafc;
             border: 1px solid var(--border-color);
-            padding: 20px;
+            padding: 15px;
             border-radius: 12px;
             display: none;
         }
 
-        /* Professional Red & Black Styled PaySlip Header */
+        @media(min-width: 600px) {
+            .result-box { padding: 20px; }
+        }
+
+        /* Professional Header */
         .payslip-header {
             text-align: center;
-            margin-bottom: 20px;
-            padding-bottom: 12px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
             border-bottom: 2px solid #d32f2f;
             background: linear-gradient(to bottom, #fff5f5, transparent);
             border-radius: 8px 8px 0 0;
-            padding-top: 12px;
+            padding-top: 10px;
         }
 
         .payslip-header h3 {
             margin: 0;
-            color: #1a202c; /* Deep Black/Slate */
-            font-size: 21px;
-            letter-spacing: 1.2px;
+            color: #1a202c;
+            font-size: 18px;
+            letter-spacing: 1px;
             font-weight: 800;
         }
 
+        @media(min-width: 600px) {
+            .payslip-header h3 { font-size: 21px; }
+        }
+
         .payslip-header h3 span {
-            color: #d32f2f; /* Vibrant Red Highlight */
+            color: #d32f2f;
         }
 
         .payslip-header p {
-            margin: 5px 0 0 0;
+            margin: 4px 0 0 0;
             color: #4a5568;
-            font-size: 13px;
+            font-size: 12px;
             font-style: italic;
             font-weight: 500;
         }
@@ -233,9 +292,13 @@
         .result-item {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             font-size: 14px;
             gap: 10px;
+        }
+
+        @media(min-width: 600px) {
+            .result-item { font-size: 15px; }
         }
 
         .result-item span:first-child {
@@ -250,17 +313,14 @@
 
         .gross-row {
             font-weight: 700 !important;
-            font-size: 15px !important;
+            font-size: 14px !important;
             color: #2b6cb0 !important;
             border-top: 1px solid var(--border-color);
             padding-top: 8px;
             margin-top: 6px;
         }
 
-        .deduction-row span:first-child {
-            color: #c53030 !important;
-        }
-        .deduction-row span:last-child {
+        .deduction-row span:first-child, .deduction-row span:last-child {
             color: #c53030 !important;
         }
 
@@ -269,43 +329,48 @@
             font-size: 16px !important;
             color: var(--primary) !important;
             border-top: 2px dashed var(--border-color);
-            padding-top: 10px;
-            margin-top: 10px;
+            padding-top: 8px;
+            margin-top: 8px;
         }
 
-        /* Disclaimer Footer */
         .disclaimer-footer {
-            margin-top: 15px;
-            padding-top: 10px;
+            margin-top: 12px;
+            padding-top: 8px;
             border-top: 1px solid #e2e8f0;
-            font-size: 11px;
+            font-size: 10px;
             color: #718096;
             text-align: center;
             font-style: italic;
-            line-height: 1.4;
+            line-height: 1.3;
         }
 
-        /* Page Footer Disclaimer */
         .page-footer-disclaimer {
             text-align: center;
-            margin-top: 20px;
-            font-size: 12px;
+            margin-top: 15px;
+            font-size: 11px;
             color: #718096;
             font-style: italic;
         }
 
-        /* Print Styling - A5 Landscape */
+        /* Section Toggles */
+        .calculator-section {
+            display: none;
+        }
+        .calculator-section.active {
+            display: block;
+        }
+
+        /* Print Styling */
         @media print {
             @page {
                 size: A5 landscape;
                 margin: 10mm;
             }
-
             body {
                 background: white;
                 padding: 0;
             }
-            .top-bar, .form-group, .info-badge, .calc-btn, .print-btn, .page-footer-disclaimer, .header {
+            .top-bar, .nav-bar, .form-group, .info-badge, .calc-btn, .print-btn, .page-footer-disclaimer, .header {
                 display: none !important;
             }
             .dashboard-container {
@@ -318,7 +383,7 @@
                 border: none;
                 padding: 0;
             }
-            .result-box {
+            .calculator-section.active .result-box {
                 display: block !important;
                 background: white !important;
                 border: 1px solid #333 !important;
@@ -378,120 +443,198 @@
         <div><i class="fa-solid fa-clock"></i> <span id="currentTime">--</span></div>
     </div>
 
+    <!-- Navigation Menu Bar with Dropdown Switcher -->
+    <div class="nav-bar">
+        <div class="nav-title"><i class="fa-solid fa-bars-progress"></i> Calculator:</div>
+        <div class="nav-dropdown-group">
+            <select id="calculatorSwitcher" onchange="switchCalculator()">
+                <option value="salaryCalc">Monthly Salary</option>
+                <option value="indemnityCalc">End of Service</option>
+            </select>
+        </div>
+    </div>
+
     <!-- Main Content Card -->
     <div class="main-card">
-        <div class="header">
-            <h2>Smart Payroll System</h2>
-        </div>
+        
+        <!-- SECTION 1: MONTHLY SALARY CALCULATOR -->
+        <div id="salaryCalcSection" class="calculator-section active">
+            <div class="header">
+                <h2>Smart Payroll & Salary Dashboard</h2>
+            </div>
 
-        <!-- Month & Year Selection -->
-        <div class="grid-row">
-            <div class="form-group">
-                <label for="selectMonth"><i class="fa-solid fa-calendar"></i> Select Month:</label>
-                <select id="selectMonth" onchange="updateMonthInfo()">
-                    <!-- Populated dynamically via JS -->
-                </select>
+            <div class="grid-row">
+                <div class="form-group">
+                    <label for="selectMonth"><i class="fa-solid fa-calendar"></i> Select Month:</label>
+                    <select id="selectMonth" onchange="updateMonthInfo()">
+                        <!-- Populated via JS -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="selectYear"><i class="fa-solid fa-calendar-alt"></i> Select Year:</label>
+                    <input type="number" id="selectYear" placeholder="e.g. 2026" onchange="updateMonthInfo()">
+                </div>
+            </div>
+
+            <div class="grid-row">
+                <div class="form-group">
+                    <label for="basicDaysInput"><i class="fa-solid fa-business-time"></i> Basic Duty Days Worked:</label>
+                    <input type="number" id="basicDaysInput" placeholder="Enter days">
+                </div>
+                <div class="form-group">
+                    <label for="siteAllowanceInput"><i class="fa-solid fa-money-bill-wave"></i> Monthly Site Allowance (Fixed):</label>
+                    <input type="number" id="siteAllowanceInput" placeholder="e.g. 200">
+                </div>
+            </div>
+
+            <div class="info-badge" id="autoInfoBadge">
+                <span id="badgeText"><i class="fa-solid fa-circle-info"></i> Please select month and year to view working days info.</span>
+            </div>
+
+            <div class="grid-row">
+                <div class="form-group">
+                    <label for="otDays"><i class="fa-solid fa-business-time"></i> Basic Overtime Days:</label>
+                    <input type="number" step="any" id="otDays" placeholder="e.g. 2">
+                </div>
+                <div class="form-group">
+                    <label for="holidays"><i class="fa-solid fa-umbrella-beach"></i> Public Holiday / Week-off Work:</label>
+                    <input type="number" step="any" id="holidays" placeholder="e.g. 1">
+                </div>
             </div>
 
             <div class="form-group">
-                <label for="selectYear"><i class="fa-solid fa-calendar-alt"></i> Select Year:</label>
-                <input type="number" id="selectYear" value="" placeholder="e.g. 2026" onchange="updateMonthInfo()">
-            </div>
-        </div>
-
-        <!-- Working Days & Site Allowance Inputs -->
-        <div class="grid-row">
-            <div class="form-group">
-                <label for="basicDaysInput"><i class="fa-solid fa-business-time"></i> Basic Duty Days Worked:</label>
-                <input type="number" id="basicDaysInput" value="" placeholder="Enter days">
-            </div>
-
-            <div class="form-group">
-                <label for="siteAllowanceInput"><i class="fa-solid fa-money-bill-wave"></i> Monthly Site Allowance (Fixed):</label>
-                <input type="number" id="siteAllowanceInput" value="" placeholder="e.g. 200">
-            </div>
-        </div>
-
-        <!-- Auto Info Badge -->
-        <div class="info-badge" id="autoInfoBadge">
-            <span id="badgeText"><i class="fa-solid fa-circle-info"></i> Please select month and year to view working days info.</span>
-        </div>
-
-        <!-- Inputs for OT, Holidays and Deduction -->
-        <div class="grid-row">
-            <div class="form-group">
-                <label for="otDays"><i class="fa-solid fa-business-time"></i> Basic Overtime Days:</label>
-                <input type="number" step="any" id="otDays" value="" placeholder="e.g. 26">
-            </div>
-
-            <div class="form-group">
-                <label for="holidays"><i class="fa-solid fa-umbrella-beach"></i> Public Holiday / Week-off Work:</label>
-                <input type="number" step="any" id="holidays" value="" placeholder="e.g. 2">
-            </div>
-        </div>
-
-        <div class="grid-row">
-            <div class="form-group" style="grid-column: 1 / -1;">
                 <label for="deductionInput"><i class="fa-solid fa-file-invoice-dollar"></i> Deduction Amount (Manual):</label>
-                <input type="number" step="any" id="deductionInput" value="" placeholder="Enter deduction amount if any (leave blank if none)">
+                <input type="number" step="any" id="deductionInput" placeholder="Enter deduction amount if any">
+            </div>
+
+            <div class="btn-container">
+                <button class="calc-btn" onclick="calculateSalary()"><i class="fa-solid fa-calculator"></i> Calculate Salary</button>
+                <button class="print-btn" id="printBtnSalary" onclick="window.print()"><i class="fa-solid fa-print"></i> Print Pay Slip</button>
+            </div>
+
+            <!-- Salary Result Box -->
+            <div class="result-box" id="resultBoxSalary">
+                <div class="payslip-header">
+                    <h3>UNOFFICIAL <span>SALARY STATEMENT</span></h3>
+                    <p>Monthly Earnings & Allowance Breakdown</p>
+                </div>
+                <div class="result-item">
+                    <span>Selected Month & Year:</span>
+                    <span id="resMonthYear">--</span>
+                </div>
+                <div class="result-item">
+                    <span>Earned Basic Salary:</span>
+                    <span id="resBasic">0.00 د.إ</span>
+                </div>
+                <div class="result-item">
+                    <span>Earned Allowance:</span>
+                    <span id="resAllowance">0.00 د.إ</span>
+                </div>
+                <div class="result-item">
+                    <span>Earned Site Allowance:</span>
+                    <span id="resSiteAllowance">0.00 د.إ</span>
+                </div>
+                <div class="result-item">
+                    <span>Overtime Amount:</span>
+                    <span id="resOT">0.00 د.إ</span>
+                </div>
+                <div class="result-item">
+                    <span>Public Holiday / Week-off Amount:</span>
+                    <span id="resHoliday">0.00 د.إ</span>
+                </div>
+                <div class="result-item gross-row">
+                    <span>Gross Salary:</span>
+                    <span id="resGross">0.00 د.إ</span>
+                </div>
+                <div class="result-item deduction-row">
+                    <span>Total Deduction:</span>
+                    <span id="resDeduction">0.00 د.إ</span>
+                </div>
+                <div class="result-item total-row">
+                    <span>Net Payable Salary:</span>
+                    <span id="resTotal">0.00 د.إ</span>
+                </div>
+                <div class="disclaimer-footer">
+                    * Note: This is an unofficial calculation for personal reference only. No claims can be made to the company based on this statement.
+                </div>
             </div>
         </div>
 
-        <div class="btn-container">
-            <button class="calc-btn" onclick="calculateSalary()"><i class="fa-solid fa-calculator"></i> Calculate Salary</button>
-            <button class="print-btn" id="printBtn" onclick="window.print()"><i class="fa-solid fa-print"></i> Print Pay Slip</button>
-        </div>
-
-        <!-- Result Breakdown Box -->
-        <div class="result-box" id="resultBox">
-            <!-- Red & Black Styled PaySlip Header without icon -->
-            <div class="payslip-header">
-                <h3>UNOFFICIAL <span>SALARY STATEMENT</span></h3>
-                <p>Monthly Earnings & Allowance Breakdown</p>
+        <!-- SECTION 2: END OF SERVICE & SETTLEMENT CALCULATOR -->
+        <div id="indemnityCalcSection" class="calculator-section">
+            <div class="header">
+                <h2>End of Service & Settlement</h2>
             </div>
 
-            <div class="result-item">
-                <span>Selected Month & Year:</span>
-                <span id="resMonthYear">--</span>
+            <div class="grid-row">
+                <div class="form-group">
+                    <label for="basicSalary">Monthly Basic Salary</label>
+                    <input type="number" id="basicSalary" placeholder="Enter basic salary">
+                </div>
+                <div class="form-group">
+                    <label for="grossSalary">Monthly Gross Salary</label>
+                    <input type="number" id="grossSalary" placeholder="Enter gross salary">
+                </div>
             </div>
-            <div class="result-item">
-                <span>Earned Basic Salary:</span>
-                <span id="resBasic">0.00 د.إ</span>
+
+            <div class="grid-row">
+                <div class="form-group">
+                    <label for="years">Years of Service</label>
+                    <input type="number" step="0.01" id="years" placeholder="e.g., 3.5">
+                </div>
+                <div class="form-group">
+                    <label for="reason">Reason of Leaving</label>
+                    <select id="reason">
+                        <option value="resignation">Resignation by Employee</option>
+                        <option value="termination">Company Termination</option>
+                    </select>
+                </div>
             </div>
-            <div class="result-item">
-                <span>Earned Allowance:</span>
-                <span id="resAllowance">0.00 د.إ</span>
+
+            <div class="grid-row">
+                <div class="form-group">
+                    <label for="leaveDays">Unused Leave Balance (Days)</label>
+                    <input type="number" step="0.5" id="leaveDays" placeholder="e.g., 15">
+                </div>
+                <div class="form-group">
+                    <label for="noticeMonths">Notice Period / Pending Salary (Months)</label>
+                    <input type="number" step="0.1" id="noticeMonths" placeholder="e.g., 1">
+                </div>
             </div>
-            <div class="result-item">
-                <span>Earned Site Allowance:</span>
-                <span id="resSiteAllowance">0.00 د.إ</span>
+
+            <div class="btn-container">
+                <button class="calc-btn" onclick="calculateSettlement()"><i class="fa-solid fa-calculator"></i> Calculate Settlement</button>
+                <button class="print-btn" id="printBtnIndemnity" onclick="window.print()"><i class="fa-solid fa-print"></i> Print Settlement</button>
             </div>
-            <div class="result-item">
-                <span>Overtime Amount:</span>
-                <span id="resOT">0.00 د.إ</span>
-            </div>
-            <div class="result-item">
-                <span>Public Holiday / Week-off Amount:</span>
-                <span id="resHoliday">0.00 د.إ</span>
-            </div>
-            <div class="result-item gross-row">
-                <span>Gross Salary:</span>
-                <span id="resGross">0.00 د.إ</span>
-            </div>
-            <div class="result-item deduction-row">
-                <span>Total Deduction:</span>
-                <span id="resDeduction">0.00 د.إ</span>
-            </div>
-            <div class="result-item total-row">
-                <span>Net Payable Salary:</span>
-                <span id="resTotal">0.00 د.إ</span>
-            </div>
-            
-            <!-- Disclaimer Footer -->
-            <div class="disclaimer-footer">
-                * Note: This is an unofficial calculation for personal reference only. No claims can be made to the company based on this statement.
+
+            <!-- Settlement Result Box -->
+            <div class="result-box" id="resultBoxIndemnity">
+                <div class="payslip-header">
+                    <h3>SETTLEMENT <span>BREAKDOWN STATEMENT</span></h3>
+                    <p>End of Service Benefits Overview</p>
+                </div>
+                <div class="result-item">
+                    <span>Indemnity / Gratuity:</span>
+                    <span id="indemnityAmount">0.00 د.إ</span>
+                </div>
+                <div class="result-item">
+                    <span>Leave Encashment:</span>
+                    <span id="leaveAmount">0.00 د.إ</span>
+                </div>
+                <div class="result-item">
+                    <span>Notice/Pending Salary:</span>
+                    <span id="noticeAmount">0.00 د.إ</span>
+                </div>
+                <div class="result-item total-row">
+                    <span>Total Payable Amount:</span>
+                    <span id="totalAmount">0.00 د.إ</span>
+                </div>
+                <div class="disclaimer-footer">
+                    * Note: Unofficial personal estimate. Not valid for formal company claims.
+                </div>
             </div>
         </div>
+
     </div>
 
     <!-- Page Footer Disclaimer -->
@@ -502,7 +645,6 @@
 
 <script>
     let totalWorkingDaysInMonth = 26;
-
     const monthsData = [
         "January", "February", "March", "April", "May", "June", 
         "July", "August", "September", "October", "November", "December"
@@ -511,7 +653,6 @@
     function populateMonths() {
         const select = document.getElementById('selectMonth');
         select.innerHTML = "<option value='' disabled selected>Select Month</option>";
-        
         monthsData.forEach((name, index) => {
             const opt = document.createElement('option');
             opt.value = index;
@@ -522,7 +663,7 @@
 
     function updateLiveClock() {
         const now = new Date();
-        document.getElementById('currentTime').innerText = now.toLocaleTimeString();
+        document.getElementById('currentTime').innerText = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
         const options = { year: 'numeric', month: 'short', day: 'numeric', weekday: 'short' };
         document.getElementById('currentDate').innerText = now.toLocaleDateString('en-US', options);
     }
@@ -531,7 +672,22 @@
 
     window.onload = function() {
         populateMonths();
+        document.getElementById('selectYear').value = new Date().getFullYear();
     };
+
+    function switchCalculator() {
+        const selectedVal = document.getElementById('calculatorSwitcher').value;
+        const salarySec = document.getElementById('salaryCalcSection');
+        const indemnitySec = document.getElementById('indemnityCalcSection');
+
+        if (selectedVal === 'salaryCalc') {
+            salarySec.classList.add('active');
+            indemnitySec.classList.remove('active');
+        } else {
+            indemnitySec.classList.add('active');
+            salarySec.classList.remove('active');
+        }
+    }
 
     function updateMonthInfo() {
         const yearInput = document.getElementById('selectYear').value;
@@ -544,7 +700,6 @@
 
         const year = parseInt(yearInput);
         const month = parseInt(monthSelect);
-
         const totalDays = new Date(year, month + 1, 0).getDate();
         
         let sundayCount = 0;
@@ -577,7 +732,6 @@
         const totalHolidayPay = holidays * holidayRatePerDay;
 
         const deductionAmount = parseFloat(document.getElementById('deductionInput').value) || 0;
-
         const monthSelect = document.getElementById('selectMonth');
         const year = document.getElementById('selectYear').value;
 
@@ -600,8 +754,51 @@
         document.getElementById('resDeduction').innerText = '- ' + deductionAmount.toFixed(2) + ' د.إ';
         document.getElementById('resTotal').innerText = netSalary.toFixed(2) + ' د.إ';
 
-        document.getElementById('resultBox').style.display = 'block';
-        document.getElementById('printBtn').style.display = 'flex';
+        document.getElementById('resultBoxSalary').style.display = 'block';
+        document.getElementById('printBtnSalary').style.display = 'flex';
+    }
+
+    function calculateSettlement() {
+        const basicSalary = parseFloat(document.getElementById('basicSalary').value) || 0;
+        const grossSalary = parseFloat(document.getElementById('grossSalary').value) || basicSalary;
+        const years = parseFloat(document.getElementById('years').value) || 0;
+        const reason = document.getElementById('reason').value;
+        const leaveDays = parseFloat(document.getElementById('leaveDays').value) || 0;
+        const noticeMonths = parseFloat(document.getElementById('noticeMonths').value) || 0;
+
+        let indemnity = 0;
+        if (years >= 1) {
+            let calculationYears = years;
+            if (reason === 'resignation') {
+                if (years < 3) {
+                    calculationYears = 0; 
+                } else if (years >= 3 && years < 5) {
+                    calculationYears = calculationYears * (1 / 3); 
+                } else if (years >= 5 && years < 10) {
+                    calculationYears = calculationYears * (2 / 3); 
+                }
+            }
+
+            if (calculationYears <= 5) {
+                indemnity = (basicSalary / 30) * 21 * calculationYears;
+            } else {
+                let firstFiveYearsPay = (basicSalary / 30) * 21 * 5;
+                let remainingYearsPay = (basicSalary / 30) * 30 * (calculationYears - 5);
+                indemnity = firstFiveYearsPay + remainingYearsPay;
+            }
+        }
+
+        let leaveEncashment = (grossSalary / 30) * leaveDays;
+        let noticeSalary = grossSalary * noticeMonths;
+        let totalPayable = indemnity + leaveEncashment + noticeSalary;
+
+        document.getElementById('indemnityAmount').innerText = indemnity.toFixed(2) + ' د.إ';
+        document.getElementById('leaveAmount').innerText = leaveEncashment.toFixed(2) + ' د.إ';
+        document.getElementById('noticeAmount').innerText = noticeSalary.toFixed(2) + ' د.إ';
+        document.getElementById('totalAmount').innerText = totalPayable.toFixed(2) + ' د.إ';
+
+        document.getElementById('resultBoxIndemnity').style.display = 'block';
+        document.getElementById('printBtnIndemnity').style.display = 'flex';
     }
 </script>
 
