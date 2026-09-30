@@ -199,30 +199,35 @@
             display: none;
         }
 
-        /* Professional PaySlip Styled Header */
+        /* Professional Red & Black Styled PaySlip Header */
         .payslip-header {
             text-align: center;
             margin-bottom: 20px;
             padding-bottom: 12px;
-            border-bottom: 2px solid #cbd5e1;
-            background: linear-gradient(to bottom, #f1f5f9, transparent);
+            border-bottom: 2px solid #d32f2f;
+            background: linear-gradient(to bottom, #fff5f5, transparent);
             border-radius: 8px 8px 0 0;
-            padding-top: 10px;
+            padding-top: 12px;
         }
 
         .payslip-header h3 {
             margin: 0;
-            color: #1e293b;
-            font-size: 20px;
-            letter-spacing: 1px;
-            font-weight: 700;
+            color: #1a202c; /* Deep Black/Slate */
+            font-size: 21px;
+            letter-spacing: 1.2px;
+            font-weight: 800;
+        }
+
+        .payslip-header h3 span {
+            color: #d32f2f; /* Vibrant Red Highlight */
         }
 
         .payslip-header p {
-            margin: 4px 0 0 0;
-            color: var(--text-muted);
+            margin: 5px 0 0 0;
+            color: #4a5568;
             font-size: 13px;
             font-style: italic;
+            font-weight: 500;
         }
 
         .result-item {
@@ -241,6 +246,22 @@
             font-weight: 600;
             color: var(--text-main);
             text-align: right;
+        }
+
+        .gross-row {
+            font-weight: 700 !important;
+            font-size: 15px !important;
+            color: #2b6cb0 !important;
+            border-top: 1px solid var(--border-color);
+            padding-top: 8px;
+            margin-top: 6px;
+        }
+
+        .deduction-row span:first-child {
+            color: #c53030 !important;
+        }
+        .deduction-row span:last-child {
+            color: #c53030 !important;
         }
 
         .total-row {
@@ -306,23 +327,31 @@
                 margin-top: 0 !important;
             }
             .payslip-header {
-                border-bottom: 2px solid #333 !important;
+                border-bottom: 2px solid #d32f2f !important;
                 background: none !important;
                 padding-bottom: 8px;
                 margin-bottom: 12px;
             }
             .payslip-header h3 {
-                color: #000 !important;
+                color: #1a202c !important;
                 font-size: 18px;
+            }
+            .payslip-header h3 span {
+                color: #d32f2f !important;
             }
             .payslip-header p {
                 font-size: 11px;
+                color: #4a5568 !important;
             }
             .result-item {
                 border-bottom: 1px solid #e2e8f0;
                 padding-bottom: 4px;
                 margin-bottom: 6px;
                 font-size: 13px;
+            }
+            .gross-row {
+                border-top: 1px solid #333 !important;
+                color: #2b6cb0 !important;
             }
             .total-row {
                 border-top: 2px solid #000 !important;
@@ -388,16 +417,23 @@
             <span id="badgeText"><i class="fa-solid fa-circle-info"></i> Please select month and year to view working days info.</span>
         </div>
 
-        <!-- Inputs for OT and Holidays -->
+        <!-- Inputs for OT, Holidays and Deduction -->
         <div class="grid-row">
             <div class="form-group">
                 <label for="otDays"><i class="fa-solid fa-business-time"></i> Basic Overtime Days:</label>
-                <input type="number" step="any" id="otDays" value="" placeholder="e.g. 5">
+                <input type="number" step="any" id="otDays" value="" placeholder="e.g. 26">
             </div>
 
             <div class="form-group">
                 <label for="holidays"><i class="fa-solid fa-umbrella-beach"></i> Public Holiday / Week-off Work:</label>
                 <input type="number" step="any" id="holidays" value="" placeholder="e.g. 2">
+            </div>
+        </div>
+
+        <div class="grid-row">
+            <div class="form-group" style="grid-column: 1 / -1;">
+                <label for="deductionInput"><i class="fa-solid fa-file-invoice-dollar"></i> Deduction Amount (Manual):</label>
+                <input type="number" step="any" id="deductionInput" value="" placeholder="Enter deduction amount if any (leave blank if none)">
             </div>
         </div>
 
@@ -408,9 +444,9 @@
 
         <!-- Result Breakdown Box -->
         <div class="result-box" id="resultBox">
-            <!-- Unofficial Styled PaySlip Header -->
+            <!-- Red & Black Styled PaySlip Header without icon -->
             <div class="payslip-header">
-                <h3><i class="fa-solid fa-file-invoice-dollar"></i> UNOFFICIAL SALARY STATEMENT</h3>
+                <h3>UNOFFICIAL <span>SALARY STATEMENT</span></h3>
                 <p>Monthly Earnings & Allowance Breakdown</p>
             </div>
 
@@ -438,8 +474,16 @@
                 <span>Public Holiday / Week-off Amount:</span>
                 <span id="resHoliday">0.00 د.إ</span>
             </div>
+            <div class="result-item gross-row">
+                <span>Gross Salary:</span>
+                <span id="resGross">0.00 د.إ</span>
+            </div>
+            <div class="result-item deduction-row">
+                <span>Total Deduction:</span>
+                <span id="resDeduction">0.00 د.إ</span>
+            </div>
             <div class="result-item total-row">
-                <span>Total Payable Salary:</span>
+                <span>Net Payable Salary:</span>
                 <span id="resTotal">0.00 د.إ</span>
             </div>
             
@@ -532,6 +576,8 @@
         const holidayRatePerDay = 73.25;
         const totalHolidayPay = holidays * holidayRatePerDay;
 
+        const deductionAmount = parseFloat(document.getElementById('deductionInput').value) || 0;
+
         const monthSelect = document.getElementById('selectMonth');
         const year = document.getElementById('selectYear').value;
 
@@ -541,7 +587,8 @@
         }
 
         const monthName = monthsData[monthSelect.value];
-        const grandTotal = earnedBasic + earnedAllowance + earnedSiteAllowance + totalOT + totalHolidayPay;
+        const grossSalary = earnedBasic + earnedAllowance + earnedSiteAllowance + totalOT + totalHolidayPay;
+        const netSalary = grossSalary - deductionAmount;
 
         document.getElementById('resMonthYear').innerText = `${monthName} ${year}`;
         document.getElementById('resBasic').innerText = earnedBasic.toFixed(2) + ' د.إ';
@@ -549,7 +596,9 @@
         document.getElementById('resSiteAllowance').innerText = earnedSiteAllowance.toFixed(2) + ' د.إ';
         document.getElementById('resOT').innerText = totalOT.toFixed(2) + ' د.إ';
         document.getElementById('resHoliday').innerText = totalHolidayPay.toFixed(2) + ' د.إ';
-        document.getElementById('resTotal').innerText = grandTotal.toFixed(2) + ' د.إ';
+        document.getElementById('resGross').innerText = grossSalary.toFixed(2) + ' د.إ';
+        document.getElementById('resDeduction').innerText = '- ' + deductionAmount.toFixed(2) + ' د.إ';
+        document.getElementById('resTotal').innerText = netSalary.toFixed(2) + ' د.إ';
 
         document.getElementById('resultBox').style.display = 'block';
         document.getElementById('printBtn').style.display = 'flex';
