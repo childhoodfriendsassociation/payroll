@@ -360,75 +360,90 @@
             display: block;
         }
 
-        /* Print Styling - Adjusted to A4 Portrait */
+        /* Print Setup: Strictly Optimized for 1-Page A4 Portrait */
         @media print {
             @page {
                 size: A4 portrait;
-                margin: 15mm;
+                margin: 10mm;
             }
-            body {
+            body, html {
                 background: white;
                 padding: 0;
+                margin: 0;
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
             }
             .top-bar, .nav-bar, .form-group, .info-badge, .calc-btn, .print-btn, .page-footer-disclaimer, .header {
                 display: none !important;
             }
             .dashboard-container {
-                max-width: 100%;
-                width: 100%;
-                margin: 0;
+                max-width: 100% !important;
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
             }
             .main-card {
-                box-shadow: none;
-                border: none;
-                padding: 0;
+                box-shadow: none !important;
+                border: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
             }
             .calculator-section.active .result-box {
                 display: block !important;
                 background: white !important;
                 border: 1px solid #333 !important;
                 border-radius: 0 !important;
-                padding: 20px !important;
+                padding: 12px 15px !important;
                 margin-top: 0 !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
             }
             .payslip-header {
                 border-bottom: 2px solid #d32f2f !important;
                 background: none !important;
-                padding-bottom: 10px;
-                margin-bottom: 15px;
+                padding-bottom: 6px !important;
+                margin-bottom: 10px !important;
+                padding-top: 0 !important;
             }
             .payslip-header h3 {
                 color: #1a202c !important;
-                font-size: 20px;
+                font-size: 16px !important;
             }
             .payslip-header h3 span {
                 color: #d32f2f !important;
             }
             .payslip-header p {
-                font-size: 12px;
+                font-size: 10px !important;
                 color: #4a5568 !important;
+                margin: 2px 0 0 0 !important;
             }
             .result-item {
-                border-bottom: 1px solid #e2e8f0;
-                padding-bottom: 6px;
-                margin-bottom: 8px;
-                font-size: 14px;
+                border-bottom: 1px solid #edf2f7;
+                padding-bottom: 4px !important;
+                margin-bottom: 5px !important;
+                font-size: 12px !important;
             }
             .gross-row {
                 border-top: 1px solid #333 !important;
                 color: #2b6cb0 !important;
+                padding-top: 4px !important;
+                margin-top: 4px !important;
             }
             .total-row {
                 border-top: 2px solid #000 !important;
                 color: #000 !important;
+                padding-top: 4px !important;
+                margin-top: 4px !important;
+                font-size: 14px !important;
             }
             .disclaimer-footer {
                 border-top: 1px solid #333 !important;
                 color: #333 !important;
                 display: block !important;
-                font-size: 10px;
-                margin-top: 15px;
-                padding-top: 8px;
+                font-size: 9px !important;
+                margin-top: 8px !important;
+                padding-top: 4px !important;
             }
         }
     </style>
