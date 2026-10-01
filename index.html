@@ -463,6 +463,18 @@
                 <h2>Smart Payroll & Salary Dashboard</h2>
             </div>
 
+            <!-- Employee Info Row -->
+            <div class="grid-row">
+                <div class="form-group">
+                    <label for="empNameSalary"><i class="fa-solid fa-user"></i> Employee Name:</label>
+                    <input type="text" id="empNameSalary" placeholder="Enter employee name">
+                </div>
+                <div class="form-group">
+                    <label for="empErpSalary"><i class="fa-solid fa-id-badge"></i> ERP ID:</label>
+                    <input type="text" id="empErpSalary" placeholder="Enter ERP ID">
+                </div>
+            </div>
+
             <div class="grid-row">
                 <div class="form-group">
                     <label for="selectMonth"><i class="fa-solid fa-calendar"></i> Select Month:</label>
@@ -519,6 +531,14 @@
                     <p>Monthly Earnings & Allowance Breakdown</p>
                 </div>
                 <div class="result-item">
+                    <span>Employee Name:</span>
+                    <span id="resEmpName">--</span>
+                </div>
+                <div class="result-item">
+                    <span>ERP ID:</span>
+                    <span id="resEmpErp">--</span>
+                </div>
+                <div class="result-item">
                     <span>Selected Month & Year:</span>
                     <span id="resMonthYear">--</span>
                 </div>
@@ -566,36 +586,48 @@
                 <h2>End of Service & Settlement</h2>
             </div>
 
+            <!-- Employee Info Row -->
             <div class="grid-row">
                 <div class="form-group">
-                    <label for="basicSalary">Monthly Basic Salary</label>
+                    <label for="empNameIndemnity"><i class="fa-solid fa-user"></i> Employee Name:</label>
+                    <input type="text" id="empNameIndemnity" placeholder="Enter employee name">
+                </div>
+                <div class="form-group">
+                    <label for="empErpIndemnity"><i class="fa-solid fa-id-badge"></i> ERP ID:</label>
+                    <input type="text" id="empErpIndemnity" placeholder="Enter ERP ID">
+                </div>
+            </div>
+
+            <div class="grid-row">
+                <div class="form-group">
+                    <label for="basicSalary"><i class="fa-solid fa-wallet"></i> Monthly Basic Salary</label>
                     <input type="number" id="basicSalary" placeholder="Enter basic salary">
                 </div>
                 <div class="form-group">
-                    <label for="grossSalary">Monthly Gross Salary</label>
+                    <label for="grossSalary"><i class="fa-solid fa-coins"></i> Monthly Gross Salary</label>
                     <input type="number" id="grossSalary" placeholder="Enter gross salary">
                 </div>
             </div>
 
-            <!-- Added Date Inputs for Auto Service Years Calculation -->
+            <!-- Date Inputs for Auto Service Years Calculation -->
             <div class="grid-row">
                 <div class="form-group">
-                    <label for="joinDate">Date of Joining</label>
+                    <label for="joinDate"><i class="fa-solid fa-calendar-plus"></i> Date of Joining</label>
                     <input type="date" id="joinDate" onchange="calculateServiceYears()">
                 </div>
                 <div class="form-group">
-                    <label for="endDate">Last Working Day</label>
+                    <label for="endDate"><i class="fa-solid fa-calendar-xmark"></i> Last Working Day</label>
                     <input type="date" id="endDate" onchange="calculateServiceYears()">
                 </div>
             </div>
 
             <div class="grid-row">
                 <div class="form-group">
-                    <label for="years">Years of Service (Auto)</label>
+                    <label for="years"><i class="fa-solid fa-hourglass-half"></i> Years of Service (Auto)</label>
                     <input type="number" step="0.01" id="years" placeholder="e.g., 3.5">
                 </div>
                 <div class="form-group">
-                    <label for="reason">Reason of Leaving</label>
+                    <label for="reason"><i class="fa-solid fa-right-from-bracket"></i> Reason of Leaving</label>
                     <select id="reason">
                         <option value="resignation">Resignation by Employee</option>
                         <option value="termination">Company Termination</option>
@@ -605,11 +637,11 @@
 
             <div class="grid-row">
                 <div class="form-group">
-                    <label for="leaveDays">Unused Leave Balance (Days)</label>
+                    <label for="leaveDays"><i class="fa-solid fa-plane-departure"></i> Unused Leave Balance (Days)</label>
                     <input type="number" step="0.5" id="leaveDays" placeholder="e.g., 15">
                 </div>
                 <div class="form-group">
-                    <label for="noticeMonths">Notice Period / Pending Salary (Months)</label>
+                    <label for="noticeMonths"><i class="fa-solid fa-file-invoice"></i> Notice Period / Pending Salary (Months)</label>
                     <input type="number" step="0.1" id="noticeMonths" placeholder="e.g., 1">
                 </div>
             </div>
@@ -624,6 +656,14 @@
                 <div class="payslip-header">
                     <h3>SETTLEMENT <span>BREAKDOWN STATEMENT</span></h3>
                     <p>End of Service Benefits Overview</p>
+                </div>
+                <div class="result-item">
+                    <span>Employee Name:</span>
+                    <span id="resEmpNameIndemnity">--</span>
+                </div>
+                <div class="result-item">
+                    <span>ERP ID:</span>
+                    <span id="resEmpErpIndemnity">--</span>
                 </div>
                 <div class="result-item">
                     <span>Service Duration:</span>
@@ -689,7 +729,6 @@
     window.onload = function() {
         populateMonths();
         document.getElementById('selectYear').value = new Date().getFullYear();
-        // Default End Date to today
         document.getElementById('endDate').valueAsDate = new Date();
     };
 
@@ -730,7 +769,6 @@
 
         totalWorkingDaysInMonth = totalDays - sundayCount;
         document.getElementById('basicDaysInput').value = totalWorkingDaysInMonth;
-        
         document.getElementById('otDays').value = totalWorkingDaysInMonth;
 
         document.getElementById('badgeText').innerHTML = `<i class="fa-solid fa-circle-info"></i> Total Days in Month: <strong>${totalDays}</strong> | Standard Working Days (Excl. Sundays): <strong>${totalWorkingDaysInMonth}</strong>`;
@@ -741,7 +779,6 @@
         document.getElementById('otDays').value = basicDays;
     }
 
-    // Function to automatically calculate Years of Service based on Join Date and End Date
     function calculateServiceYears() {
         const joinDateVal = document.getElementById('joinDate').value;
         const endDateVal = document.getElementById('endDate').value;
@@ -771,18 +808,17 @@
             months += 12;
         }
 
-        // Exact decimal calculation (Total days / 365.25)
         const diffTime = Math.abs(end - start);
-        const diffDays = diffTime / (1000 * 60 * 60 * 24) + 1; // including start day
+        const diffDays = diffTime / (1000 * 60 * 60 * 24) + 1;
         const exactYears = (diffDays / 365.25).toFixed(2);
 
         document.getElementById('years').value = exactYears;
-        
-        // Store duration string for breakdown display
         window.serviceDurationString = `${years} Years, ${months} Months, ${days} Days (${diffDays} Days)`;
     }
 
     function calculateSalary() {
+        const empName = document.getElementById('empNameSalary').value || 'N/A';
+        const empErp = document.getElementById('empErpSalary').value || 'N/A';
         const actualWorkedDays = parseFloat(document.getElementById('basicDaysInput').value) || 0;
         const monthlySiteAllowance = parseFloat(document.getElementById('siteAllowanceInput').value) || 0;
         
@@ -811,6 +847,8 @@
         const grossSalary = earnedBasic + earnedAllowance + earnedSiteAllowance + totalOT + totalHolidayPay;
         const netSalary = grossSalary - deductionAmount;
 
+        document.getElementById('resEmpName').innerText = empName;
+        document.getElementById('resEmpErp').innerText = empErp;
         document.getElementById('resMonthYear').innerText = `${monthName} ${year}`;
         document.getElementById('resBasic').innerText = earnedBasic.toFixed(2) + ' د.إ';
         document.getElementById('resAllowance').innerText = earnedAllowance.toFixed(2) + ' د.إ';
@@ -826,6 +864,8 @@
     }
 
     function calculateSettlement() {
+        const empName = document.getElementById('empNameIndemnity').value || 'N/A';
+        const empErp = document.getElementById('empErpIndemnity').value || 'N/A';
         const basicSalary = parseFloat(document.getElementById('basicSalary').value) || 0;
         const grossSalary = parseFloat(document.getElementById('grossSalary').value) || basicSalary;
         const years = parseFloat(document.getElementById('years').value) || 0;
@@ -859,6 +899,8 @@
         let noticeSalary = grossSalary * noticeMonths;
         let totalPayable = indemnity + leaveEncashment + noticeSalary;
 
+        document.getElementById('resEmpNameIndemnity').innerText = empName;
+        document.getElementById('resEmpErpIndemnity').innerText = empErp;
         document.getElementById('serviceDurationText').innerText = window.serviceDurationString || (years + ' Years');
         document.getElementById('indemnityAmount').innerText = indemnity.toFixed(2) + ' د.إ';
         document.getElementById('leaveAmount').innerText = leaveEncashment.toFixed(2) + ' د.إ';
