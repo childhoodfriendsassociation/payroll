@@ -577,9 +577,21 @@
                 </div>
             </div>
 
+            <!-- Added Date Inputs for Auto Service Years Calculation -->
             <div class="grid-row">
                 <div class="form-group">
-                    <label for="years">Years of Service</label>
+                    <label for="joinDate">Date of Joining</label>
+                    <input type="date" id="joinDate" onchange="calculateServiceYears()">
+                </div>
+                <div class="form-group">
+                    <label for="endDate">End Date / Resignation Date</label>
+                    <input type="date" id="endDate" onchange="calculateServiceYears()">
+                </div>
+            </div>
+
+            <div class="grid-row">
+                <div class="form-group">
+                    <label for="years">Years of Service (Auto / Manual)</label>
                     <input type="number" step="0.01" id="years" placeholder="e.g., 3.5">
                 </div>
                 <div class="form-group">
@@ -612,6 +624,10 @@
                 <div class="payslip-header">
                     <h3>SETTLEMENT <span>BREAKDOWN STATEMENT</span></h3>
                     <p>End of Service Benefits Overview</p>
+                </div>
+                <div class="result-item">
+                    <span>Service Duration:</span>
+                    <span id="serviceDurationText">--</span>
                 </div>
                 <div class="result-item">
                     <span>Indemnity / Gratuity:</span>
@@ -673,6 +689,8 @@
     window.onload = function() {
         populateMonths();
         document.getElementById('selectYear').value = new Date().getFullYear();
+        // Default End Date to today
+        document.getElementById('endDate').valueAsDate = new Date();
     };
 
     function switchCalculator() {
@@ -713,16 +731,55 @@
         totalWorkingDaysInMonth = totalDays - sundayCount;
         document.getElementById('basicDaysInput').value = totalWorkingDaysInMonth;
         
-        // Sync working days to OT days automatically
         document.getElementById('otDays').value = totalWorkingDaysInMonth;
 
         document.getElementById('badgeText').innerHTML = `<i class="fa-solid fa-circle-info"></i> Total Days in Month: <strong>${totalDays}</strong> | Standard Working Days (Excl. Sundays): <strong>${totalWorkingDaysInMonth}</strong>`;
     }
 
-    // Function to sync Basic Duty Days to Basic Overtime Days on input change
     function syncWorkingDaysToOT() {
         const basicDays = document.getElementById('basicDaysInput').value;
         document.getElementById('otDays').value = basicDays;
+    }
+
+    // Function to automatically calculate Years of Service based on Join Date and End Date
+    function calculateServiceYears() {
+        const joinDateVal = document.getElementById('joinDate').value;
+        const endDateVal = document.getElementById('endDate').value;
+
+        if (!joinDateVal || !endDateVal) return;
+
+        const start = new Date(joinDateVal);
+        const end = new Date(endDateVal);
+
+        if (end < start) {
+            alert("End Date cannot be earlier than Join Date!");
+            return;
+        }
+
+        let years = end.getFullYear() - start.getFullYear();
+        let months = end.getMonth() - start.getMonth();
+        let days = end.getDate() - start.getDate();
+
+        if (days < 0) {
+            months--;
+            const prevMonth = new Date(end.getFullYear(), end.getMonth(), 0);
+            days += prevMonth.getDate();
+        }
+
+        if (months < 0) {
+            years--;
+            months += 12;
+        }
+
+        // Exact decimal calculation (Total days / 365.25)
+        const diffTime = Math.abs(end - start);
+        const diffDays = diffTime / (1000 * 60 * 60 * 24) + 1; // including start day
+        const exactYears = (diffDays / 365.25).toFixed(2);
+
+        document.getElementById('years').value = exactYears;
+        
+        // Store duration string for breakdown display
+        window.serviceDurationString = `${years} Years, ${months} Months, ${days} Days (${diffDays} Days)`;
     }
 
     function calculateSalary() {
@@ -772,7 +829,7 @@
         const basicSalary = parseFloat(document.getElementById('basicSalary').value) || 0;
         const grossSalary = parseFloat(document.getElementById('grossSalary').value) || basicSalary;
         const years = parseFloat(document.getElementById('years').value) || 0;
-        const reason = document.getElementById('reason.value') || document.getElementById('reason').value;
+        const reason = document.getElementById('reason').value;
         const leaveDays = parseFloat(document.getElementById('leaveDays').value) || 0;
         const noticeMonths = parseFloat(document.getElementById('noticeMonths').value) || 0;
 
@@ -802,6 +859,7 @@
         let noticeSalary = grossSalary * noticeMonths;
         let totalPayable = indemnity + leaveEncashment + noticeSalary;
 
+        document.getElementById('serviceDurationText').innerText = window.serviceDurationString || (years + ' Years');
         document.getElementById('indemnityAmount').innerText = indemnity.toFixed(2) + ' د.إ';
         document.getElementById('leaveAmount').innerText = leaveEncashment.toFixed(2) + ' د.إ';
         document.getElementById('noticeAmount').innerText = noticeSalary.toFixed(2) + ' د.إ';
