@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprehensive Payroll & Settlement Dashboard</title>
+    <!-- Google Fonts & FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #d32f2f;
+            --primary-dark: #b71c1c;
+            --bg-color: #f4f6f9;
+            --card-bg: #ffffff;
+            --text-main: #2d3748;
+            --text-muted: #718096;
+            --border-color: #cbd5e1;
+        }
+
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 10px;
+        }
+
+        .dashboard-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Top Bar Info - Mobile Friendly */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--card-bg);
+            padding: 10px 12px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 12px;
+            font-size: 13px;
+            color: var(--text-muted);
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .top-bar div {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .top-bar i {
+            color: var(--primary);
+        }
+
+        /* Navigation Menu Bar / Dropdown Style */
+        .nav-bar {
+            background: var(--card-bg);
+            padding: 10px 12px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .nav-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-dropdown-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            justify-content: flex-end;
+        }
+
+        .nav-dropdown-group select {
+            width: 100%;
+            max-width: 220px;
+            padding: 8px 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: bold;
+            color: var(--primary);
+            background: #fff;
+            cursor: pointer;
+        }
+
+        /* Main Card */
+        .main-card {
+            background: var(--card-bg);
+            padding: 15px;
+            border-radius: 14px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+        }
+
+        @media(min-width: 600px) {
+            .main-card {
+                padding: 30px;
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 12px;
+        }
+
+        h2 {
+            color: var(--primary);
+            margin: 0;
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        @media(min-width: 600px) {
+            h2 { font-size: 26px; }
+        }
+
+        /* Grid Layout */
+        .grid-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        @media(min-width: 600px) {
+            .grid-row {
+                grid-template-columns: 1fr 1fr;
+                gap: 20px;
+            }
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            font-size: 13px;
+            color: #4a5568;
+        }
+
+        @media(min-width: 600px) {
+            label { font-size: 14px; }
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px 12px;
+            box-sizing: border-box;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.3s;
+            background: #fff;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.1);
+        }
+
+        .info-badge {
+            background: #fff5f5;
+            border-left: 4px solid var(--primary);
+            padding: 10px;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 15px;
+            font-size: 13px;
+            color: #c53030;
+            line-height: 1.4;
+        }
+
+        .btn-container {
+            display: flex;
+            gap: 10px;
+            flex-direction: column;
+            margin-top: 15px;
+        }
+
+        @media(min-width: 500px) {
+            .btn-container {
+                flex-direction: row;
+            }
+        }
+
+        .calc-btn, .print-btn {
+            padding: 12px;
+            width: 100%;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-family: inherit;
+        }
+
+        .calc-btn {
+            background: linear-gradient(135deg, #d32f2f, #b71c1c);
+            color: white;
+            box-shadow: 0 4px 12px rgba(211, 47, 47, 0.3);
+        }
+
+        .print-btn {
+            background: #2b6cb0;
+            color: white;
+            box-shadow: 0 4px 12px rgba(43, 108, 176, 0.3);
+            display: none;
+        }
+
+        .calc-btn:hover, .print-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Result Section */
+        .result-box {
+            margin-top: 20px;
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            border-radius: 12px;
+            display: none;
+        }
+
+        @media(min-width: 600px) {
+            .result-box { padding: 20px; }
+        }
+
+        /* Professional Header */
+        .payslip-header {
+            text-align: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #d32f2f;
+            background: linear-gradient(to bottom, #fff5f5, transparent);
+            border-radius: 8px 8px 0 0;
+            padding-top: 10px;
+        }
+
+        .payslip-header h3 {
+            margin: 0;
+            color: #1a202c;
+            font-size: 18px;
+            letter-spacing: 1px;
+            font-weight: 800;
+        }
+
+        @media(min-width: 600px) {
+            .payslip-header h3 { font-size: 21px; }
+        }
+
+        .payslip-header h3 span {
+            color: #d32f2f;
+        }
+
+        .payslip-header p {
+            margin: 4px 0 0 0;
+            color: #4a5568;
+            font-size: 12px;
+            font-style: italic;
+            font-weight: 500;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+            gap: 10px;
+        }
+
+        @media(min-width: 600px) {
+            .result-item { font-size: 15px; }
+        }
+
+        .result-item span:first-child {
+            color: var(--text-muted);
+        }
+
+        .result-item span:last-child {
+            font-weight: 600;
+            color: var(--text-main);
+            text-align: right;
+        }
+
+        .gross-row {
+            font-weight: 700 !important;
+            font-size: 14px !important;
+            color: #2b6cb0 !important;
+            border-top: 1px solid var(--border-color);
+            padding-top: 8px;
+            margin-top: 6px;
+        }
+
+        .deduction-row span:first-child, .deduction-row span:last-child {
+            color: #c53030 !important;
+        }
+
+        .total-row {
+            font-weight: 700 !important;
+            font-size: 16px !important;
+            color: var(--primary) !important;
+            border-top: 2px dashed var(--border-color);
+            padding-top: 8px;
+            margin-top: 8px;
+        }
+
+        .disclaimer-footer {
+            margin-top: 12px;
+            padding-top: 8px;
+            border-top: 1px solid #e2e8f0;
+            font-size: 10px;
+            color: #718096;
+            text-align: center;
+            font-style: italic;
+            line-height: 1.3;
+        }
+
+        .page-footer-disclaimer {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 11px;
+            color: #718096;
+            font-style: italic;
+        }
+
+        /* Section Toggles */
+        .calculator-section {
+            display: none;
+        }
+        .calculator-section.active {
+            display: block;
+        }
+
+        /* Print Setup: Strictly Optimized for 1-Page A4 Portrait */
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 10mm;
+            }
+            body, html {
+                background: white;
+                padding: 0;
+                margin: 0;
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+            }
+            .top-bar, .nav-bar, .form-group, .info-badge, .calc-btn, .print-btn, .page-footer-disclaimer, .header {
+                display: none !important;
+            }
+            .dashboard-container {
+                max-width: 100% !important;
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            .main-card {
+                box-shadow: none !important;
+                border: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            .calculator-section.active .result-box {
+                display: block !important;
+                background: white !important;
+                border: 1px solid #333 !important;
+                border-radius: 0 !important;
+                padding: 12px 15px !important;
+                margin-top: 0 !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
+            }
+            .payslip-header {
+                border-bottom: 2px solid #d32f2f !important;
+                background: none !important;
+                padding-bottom: 6px !important;
+                margin-bottom: 10px !important;
+                padding-top: 0 !important;
+            }
+            .payslip-header h3 {
+                color: #1a202c !important;
+                font-size: 16px !important;
+            }
+            .payslip-header h3 span {
+                color: #d32f2f !important;
+            }
+            .payslip-header p {
+                font-size: 10px !important;
+                color: #4a5568 !important;
+                margin: 2px 0 0 0 !important;
+            }
+            .result-item {
+                border-bottom: 1px solid #edf2f7;
+                padding-bottom: 4px !important;
+                margin-bottom: 5px !important;
+                font-size: 12px !important;
+            }
+            .gross-row {
+                border-top: 1px solid #333 !important;
+                color: #2b6cb0 !important;
+                padding-top: 4px !important;
+                margin-top: 4px !important;
+            }
+            .total-row {
+                border-top: 2px solid #000 !important;
+                color: #000 !important;
+                padding-top: 4px !important;
+                margin-top: 4px !important;
+                font-size: 14px !important;
+            }
+            .disclaimer-footer {
+                border-top: 1px solid #333 !important;
+                color: #333 !important;
+                display: block !important;
+                font-size: 9px !important;
+                margin-top: 8px !important;
+                padding-top: 4px !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="dashboard-container">
+    <!-- Top Live Widget -->
+    <div class="top-bar">
+        <div><i class="fa-solid fa-location-dot"></i> <span id="locationText">Dubai, UAE</span></div>
+        <div><i class="fa-solid fa-calendar-days"></i> <span id="currentDate">--</span></div>
+        <div><i class="fa-solid fa-clock"></i> <span id="currentTime">--</span></div>
+    </div>
+
+    <!-- Navigation Menu Bar with Dropdown Switcher -->
+    <div class="nav-bar">
+        <div class="nav-title"><i class="fa-solid fa-bars-progress"></i> Calculator:</div>
+        <div class="nav-dropdown-group">
+            <select id="calculatorSwitcher" onchange="switchCalculator()">
+                <option value="salaryCalc">Monthly Salary</option>
+                <option value="indemnityCalc">End of Service</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Main Content Card -->
+    <div class="main-card">
+        
+        <!-- SECTION 1: MONTHLY SALARY CALCULATOR -->
+        <div id="salaryCalcSection" class="calculator-section active">
+            <div class="header">
+                <h2>Smart Payroll & Salary Dashboard</h2>
+            </div>
+
+            <!-- Employee Info Row -->
+            <div class="grid-row">
+                <div class="form-group">
+                    <label for="empNameSalary"><i class="fa-solid fa-user"></i> Employee Name:</label>
+                    <input type="text" id="empNameSalary" placeholder="Enter employee name">
+                </div>
+                <div class="form-group">
+                    <label for="empErpSalary"><i class="fa-solid fa-id-badge"></i> ERP ID:</label>
+                    <input type="text" id="empErpSalary" placeholder="Enter ERP ID">
+                </div>
+            </div>
+
+            <div class="grid-row">
+                <div class="form-group">
+                    <label for="selectMonth"><i class="fa-solid fa-calendar"></i> Select Month:</label>
+                    <select id="selectMonth" onchange="updateMonthInfo()">
+                        <!-- Populated via JS -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="selectYear"><i class="fa-solid fa-calendar-alt"></i> Select Year:</label>
+                    <input type="number" id="selectYear" placeholder="e.g. 2026" onchange="updateMonthInfo()">
+                </div>
+            </div>
+
+            <div class="grid-row">
+                <div class="form-group">
+                    <label for="basicDaysInput"><i class="fa-solid fa-business-time"></i> Basic Duty Days Worked:</label>
+                    <input type="number" id="basicDaysInput" placeholder="Enter days" oninput="syncWorkingDaysToOT()">
+                </div>
+                <div class="form-group">
+                    <label for="otDays"><i class="fa-solid fa-business-time"></i> Basic Overtime Days:</label>
+                    <input type="number" step="any" id="otDays" placeholder="e.g. 2">
+                </div>
+            </div>
+
+            <div class="info-badge" id="autoInfoBadge">
+                <span id="badgeText"><i class="fa-solid fa-circle-info"></i> Please select month and year to view working days info.</span>
+            </div>
+
+            <div class="grid-row">
+                <div class="form-group">
+                    <label for="siteAllowanceInput"><i class="fa-solid fa-money-bill-wave"></i> Monthly Site Allowance (Fixed):</label>
+                    <input type="number" id="siteAllowanceInput" placeholder="e.g. 200">
+                </div>
+                <div class="form-group">
+                    <label for="holidays"><i class="fa-solid fa-umbrella-beach"></i> Holiday/Weekly Working Days:</label>
+                    <input type="number" step="any" id="holidays" placeholder="e.g. 1">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="deductionInput"><i class="fa-solid fa-file-invoice-dollar"></i> Deduction Amount (Manual):</label>
+                <input type="number" step="any" id="deductionInput" placeholder="Enter deduction amount if any">
+            </div>
+
+            <div class="btn-container">
+                <button class="calc-btn" onclick="calculateSalary()"><i class="fa-solid fa-calculator"></i> Calculate Salary</button>
+                <button class="print-btn" id="printBtnSalary" onclick="window.print()"><i class="fa-solid fa-print"></i> Print Pay Slip</button>
+            </div>
+
+            <!-- Salary Result Box -->
+            <div class="result-box" id="resultBoxSalary">
+                <div class="payslip-header">
+                    <h3>UNOFFICIAL <span>SALARY STATEMENT</span></h3>
+                    <p>Monthly Earnings & Allowance Breakdown</p>
+                </div>
+                <div class="result-item">
+                    <span>Employee Name:</span>
+                    <span id="resEmpName">--</span>
+                </div>
+                <div class="result-item">
+                    <span>ERP ID:</span>
+                    <span id="resEmpErp">--</span>
+                </div>
+                <div class="result-item">
+                    <span>Selected Month & Year:</span>
+                    <span id="resMonthYear">--</span>
+                </div>
+                <div class="result-item">
+                    <span>Earned Basic Salary:</span>
+                    <span id="resBasic">0.00 د.إ</span>
+                </div>
+                <div class="result-item">
+                    <span>Earned Allowance:</span>
+                    <span id="resAllowance">0.00 د.إ</span>
+                </div>
+                <div class="result-item">
+                    <span>Earned Site Allowance:</span>
+                    <span id="resSiteAllowance">0.00 د.إ</span>
+                </div>
+                <div class="result-item">
+                    <span>Overtime Amount:</span>
+                    <span id="resOT">0.00 د.إ</span>
+                </div>
+                <div class="result-item">
+                    <span>Holiday/Weekly Working Amount:</span>
+                    <span id="resHoliday">0.00 د.إ</span>
+                </div>
+                <div class="result-item gross-row">
+                    <span>Gross Salary:</span>
+                    <span id="resGross">0.00 د.إ</span>
+                </div>
+                <div class="result-item deduction-row">
+                    <span>Total Deduction:</span>
+                    <span id="resDeduction">0.00 د.إ</span>
+                </div>
+                <div class="result-item total-row">
+                    <span>Net Payable Salary:</span>
+                    <span id="resTotal">0.00 د.إ</span>
+                </div>
+                <div class="disclaimer-footer">
+                    * Note: This is an unofficial calculation for personal reference only. No claims can be made to the company based on this statement.
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 2: END OF SERVICE & SETTLEMENT CALCULATOR -->
+        <div id="indemnityCalcSection" class="calculator-section">
+            <div class="header">
+                <h2>End of Service & Settlement</h2>
+            </div>
+
+            <!-- Employee Info Row -->
+            <div class="grid-row">
+                <div class="form-group">
+                    <label for="empNameIndemnity"><i class="fa-solid fa-user"></i> Employee Name:</label>
+                    <input type="text" id="empNameIndemnity" placeholder="Enter employee name">
+                </div>
+                <div class="form-group">
+                    <label for="empErpIndemnity"><i class="fa-solid fa-id-badge"></i> ERP ID:</label>
+                    <input type="text" id="empErpIndemnity" placeholder="Enter ERP ID">
+                </div>
+            </div>
+
+            <div class="grid-row">
+                <div class="form-group">
+                    <label for="basicSalary"><i class="fa-solid fa-wallet"></i> Monthly Basic Salary</label>
+                    <input type="number" id="basicSalary" placeholder="Enter basic salary">
+                </div>
+                <div class="form-group">
+                    <label for="grossSalary"><i class="fa-solid fa-coins"></i> Monthly Gross Salary</label>
+                    <input type="number" id="grossSalary" placeholder="Enter gross salary">
+                </div>
+            </div>
+
+            <!-- Date Inputs for Auto Service Years Calculation -->
+            <div class="grid-row">
+                <div class="form-group">
+                    <label for="joinDate"><i class="fa-solid fa-calendar-plus"></i> Date of Joining</label>
+                    <input type="date" id="joinDate" onchange="calculateServiceYears()">
+                </div>
+                <div class="form-group">
+                    <label for="endDate"><i class="fa-solid fa-calendar-xmark"></i> Last Working Day</label>
+                    <input type="date" id="endDate" onchange="calculateServiceYears()">
+                </div>
+            </div>
+
+            <div class="grid-row">
+                <div class="form-group">
+                    <label for="years"><i class="fa-solid fa-hourglass-half"></i> Years of Service (Auto)</label>
+                    <input type="number" step="0.01" id="years" placeholder="e.g., 3.5">
+                </div>
+                <div class="form-group">
+                    <label for="reason"><i class="fa-solid fa-right-from-bracket"></i> Reason of Leaving</label>
+                    <select id="reason">
+                        <option value="resignation">Resignation by Employee</option>
+                        <option value="termination">Company Termination</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid-row">
+                <div class="form-group">
+                    <label for="leaveDays"><i class="fa-solid fa-plane-departure"></i> Unused Leave Balance (Days)</label>
+                    <input type="number" step="0.5" id="leaveDays" placeholder="e.g., 15">
+                </div>
+                <div class="form-group">
+                    <label for="noticeMonths"><i class="fa-solid fa-file-invoice"></i> Notice Period / Pending Salary (Months)</label>
+                    <input type="number" step="0.1" id="noticeMonths" placeholder="e.g., 1">
+                </div>
+            </div>
+
+            <div class="btn-container">
+                <button class="calc-btn" onclick="calculateSettlement()"><i class="fa-solid fa-calculator"></i> Calculate Settlement</button>
+                <button class="print-btn" id="printBtnIndemnity" onclick="window.print()"><i class="fa-solid fa-print"></i> Print Settlement</button>
+            </div>
+
+            <!-- Settlement Result Box -->
+            <div class="result-box" id="resultBoxIndemnity">
+                <div class="payslip-header">
+                    <h3>SETTLEMENT <span>BREAKDOWN STATEMENT</span></h3>
+                    <p>End of Service Benefits Overview</p>
+                </div>
+                <div class="result-item">
+                    <span>Employee Name:</span>
+                    <span id="resEmpNameIndemnity">--</span>
+                </div>
+                <div class="result-item">
+                    <span>ERP ID:</span>
+                    <span id="resEmpErpIndemnity">--</span>
+                </div>
+                <div class="result-item">
+                    <span>Service Duration:</span>
+                    <span id="serviceDurationText">--</span>
+                </div>
+                <div class="result-item">
+                    <span>Indemnity / Gratuity:</span>
+                    <span id="indemnityAmount">0.00 د.إ</span>
+                </div>
+                <div class="result-item">
+                    <span>Leave Encashment:</span>
+                    <span id="leaveAmount">0.00 د.إ</span>
+                </div>
+                <div class="result-item">
+                    <span>Notice/Pending Salary:</span>
+                    <span id="noticeAmount">0.00 د.إ</span>
+                </div>
+                <div class="result-item total-row">
+                    <span>Total Payable Amount:</span>
+                    <span id="totalAmount">0.00 د.إ</span>
+                </div>
+                <div class="disclaimer-footer">
+                    * Note: Unofficial personal estimate. Not valid for formal company claims.
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Page Footer Disclaimer -->
+    <div class="page-footer-disclaimer">
+        * Unofficial personal estimate. Not valid for company claims.
+    </div>
+</div>
+
+<script>
+    let totalWorkingDaysInMonth = 26;
+    const monthsData = [
+        "January", "February", "March", "April", "May", "June", 
+        "July", "August", "September", "October", "November", "December"
+    ];
+
+    function populateMonths() {
+        const select = document.getElementById('selectMonth');
+        select.innerHTML = "<option value='' disabled selected>Select Month</option>";
+        monthsData.forEach((name, index) => {
+            const opt = document.createElement('option');
+            opt.value = index;
+            opt.textContent = name;
+            select.appendChild(opt);
+        });
+    }
+
+    function updateLiveClock() {
+        const now = new Date();
+        document.getElementById('currentTime').innerText = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+        const options = { year: 'numeric', month: 'short', day: 'numeric', weekday: 'short' };
+        document.getElementById('currentDate').innerText = now.toLocaleDateString('en-US', options);
+    }
+    setInterval(updateLiveClock, 1000);
+    updateLiveClock();
+
+    window.onload = function() {
+        populateMonths();
+        document.getElementById('selectYear').value = new Date().getFullYear();
+        document.getElementById('endDate').valueAsDate = new Date();
+    };
+
+    function switchCalculator() {
+        const selectedVal = document.getElementById('calculatorSwitcher').value;
+        const salarySec = document.getElementById('salaryCalcSection');
+        const indemnitySec = document.getElementById('indemnityCalcSection');
+
+        if (selectedVal === 'salaryCalc') {
+            salarySec.classList.add('active');
+            indemnitySec.classList.remove('active');
+        } else {
+            indemnitySec.classList.add('active');
+            salarySec.classList.remove('active');
+        }
+    }
+
+    function updateMonthInfo() {
+        const yearInput = document.getElementById('selectYear').value;
+        const monthSelect = document.getElementById('selectMonth').value;
+
+        if (yearInput === "" || monthSelect === "") {
+            document.getElementById('badgeText').innerHTML = `<i class="fa-solid fa-circle-info"></i> Please select month and year to view working days info.`;
+            return;
+        }
+
+        const year = parseInt(yearInput);
+        const month = parseInt(monthSelect);
+        const totalDays = new Date(year, month + 1, 0).getDate();
+        
+        let sundayCount = 0;
+        for (let day = 1; day <= totalDays; day++) {
+            const dateObj = new Date(year, month, day);
+            if (dateObj.getDay() === 0) {
+                sundayCount++;
+            }
+        }
+
+        totalWorkingDaysInMonth = totalDays - sundayCount;
+        document.getElementById('basicDaysInput').value = totalWorkingDaysInMonth;
+        document.getElementById('otDays').value = totalWorkingDaysInMonth;
+
+        document.getElementById('badgeText').innerHTML = `<i class="fa-solid fa-circle-info"></i> Total Days in Month: <strong>${totalDays}</strong> | Standard Working Days (Excl. Sundays): <strong>${totalWorkingDaysInMonth}</strong>`;
+    }
+
+    function syncWorkingDaysToOT() {
+        const basicDays = document.getElementById('basicDaysInput').value;
+        document.getElementById('otDays').value = basicDays;
+    }
+
+    function calculateServiceYears() {
+        const joinDateVal = document.getElementById('joinDate').value;
+        const endDateVal = document.getElementById('endDate').value;
+
+        if (!joinDateVal || !endDateVal) return;
+
+        const start = new Date(joinDateVal);
+        const end = new Date(endDateVal);
+
+        if (end < start) {
+            alert("End Date cannot be earlier than Join Date!");
+            return;
+        }
+
+        let years = end.getFullYear() - start.getFullYear();
+        let months = end.getMonth() - start.getMonth();
+        let days = end.getDate() - start.getDate();
+
+        if (days < 0) {
+            months--;
+            const prevMonth = new Date(end.getFullYear(), end.getMonth(), 0);
+            days += prevMonth.getDate();
+        }
+
+        if (months < 0) {
+            years--;
+            months += 12;
+        }
+
+        const diffTime = Math.abs(end - start);
+        const diffDays = diffTime / (1000 * 60 * 60 * 24) + 1;
+        const exactYears = (diffDays / 365.25).toFixed(2);
+
+        document.getElementById('years').value = exactYears;
+        window.serviceDurationString = `${years} Years, ${months} Months, ${days} Days (${diffDays} Days)`;
+    }
+
+    function calculateSalary() {
+        const empName = document.getElementById('empNameSalary').value || 'N/A';
+        const empErp = document.getElementById('empErpSalary').value || 'N/A';
+        const actualWorkedDays = parseFloat(document.getElementById('basicDaysInput').value) || 0;
+        const monthlySiteAllowance = parseFloat(document.getElementById('siteAllowanceInput').value) || 0;
+        
+        const earnedBasic = (1200 / (totalWorkingDaysInMonth || 26)) * actualWorkedDays;
+        const earnedAllowance = (720 / (totalWorkingDaysInMonth || 26)) * actualWorkedDays;
+        const earnedSiteAllowance = (monthlySiteAllowance / (totalWorkingDaysInMonth || 26)) * actualWorkedDays;
+        
+        const otDays = parseFloat(document.getElementById('otDays').value) || 0;
+        const otRatePerDay = 342 / 26; 
+        const totalOT = otRatePerDay * otDays;
+
+        const holidays = parseFloat(document.getElementById('holidays').value) || 0;
+        const holidayRatePerDay = 73.25;
+        const totalHolidayPay = holidays * holidayRatePerDay;
+
+        const deductionAmount = parseFloat(document.getElementById('deductionInput').value) || 0;
+        const monthSelect = document.getElementById('selectMonth');
+        const year = document.getElementById('selectYear').value;
+
+        if (monthSelect.value === "" || year === "") {
+            alert("Please select both Month and Year first!");
+            return;
+        }
+
+        const monthName = monthsData[monthSelect.value];
+        const grossSalary = earnedBasic + earnedAllowance + earnedSiteAllowance + totalOT + totalHolidayPay;
+        const netSalary = grossSalary - deductionAmount;
+
+        document.getElementById('resEmpName').innerText = empName;
+        document.getElementById('resEmpErp').innerText = empErp;
+        document.getElementById('resMonthYear').innerText = `${monthName} ${year}`;
+        document.getElementById('resBasic').innerText = earnedBasic.toFixed(2) + ' د.إ';
+        document.getElementById('resAllowance').innerText = earnedAllowance.toFixed(2) + ' د.إ';
+        document.getElementById('resSiteAllowance').innerText = earnedSiteAllowance.toFixed(2) + ' د.إ';
+        document.getElementById('resOT').innerText = totalOT.toFixed(2) + ' د.إ';
+        document.getElementById('resHoliday').innerText = totalHolidayPay.toFixed(2) + ' د.إ';
+        document.getElementById('resGross').innerText = grossSalary.toFixed(2) + ' د.إ';
+        document.getElementById('resDeduction').innerText = '- ' + deductionAmount.toFixed(2) + ' د.إ';
+        document.getElementById('resTotal').innerText = netSalary.toFixed(2) + ' د.إ';
+
+        document.getElementById('resultBoxSalary').style.display = 'block';
+        document.getElementById('printBtnSalary').style.display = 'flex';
+    }
+
+    function calculateSettlement() {
+        const empName = document.getElementById('empNameIndemnity').value || 'N/A';
+        const empErp = document.getElementById('empErpIndemnity').value || 'N/A';
+        const basicSalary = parseFloat(document.getElementById('basicSalary').value) || 0;
+        const grossSalary = parseFloat(document.getElementById('grossSalary').value) || basicSalary;
+        const years = parseFloat(document.getElementById('years').value) || 0;
+        const reason = document.getElementById('reason').value;
+        const leaveDays = parseFloat(document.getElementById('leaveDays').value) || 0;
+        const noticeMonths = parseFloat(document.getElementById('noticeMonths').value) || 0;
+
+        let indemnity = 0;
+        if (years >= 1) {
+            let calculationYears = years;
+            if (reason === 'resignation') {
+                if (years < 3) {
+                    calculationYears = 0; 
+                } else if (years >= 3 && years < 5) {
+                    calculationYears = calculationYears * (1 / 3); 
+                } else if (years >= 5 && years < 10) {
+                    calculationYears = calculationYears * (2 / 3); 
+                }
+            }
+
+            if (calculationYears <= 5) {
+                indemnity = (basicSalary / 30) * 21 * calculationYears;
+            } else {
+                let firstFiveYearsPay = (basicSalary / 30) * 21 * 5;
+                let remainingYearsPay = (basicSalary / 30) * 30 * (calculationYears - 5);
+                indemnity = firstFiveYearsPay + remainingYearsPay;
+            }
+        }
+
+        let leaveEncashment = (grossSalary / 30) * leaveDays;
+        let noticeSalary = grossSalary * noticeMonths;
+        let totalPayable = indemnity + leaveEncashment + noticeSalary;
+
+        document.getElementById('resEmpNameIndemnity').innerText = empName;
+        document.getElementById('resEmpErpIndemnity').innerText = empErp;
+        document.getElementById('serviceDurationText').innerText = window.serviceDurationString || (years + ' Years');
+        document.getElementById('indemnityAmount').innerText = indemnity.toFixed(2) + ' د.إ';
+        document.getElementById('leaveAmount').innerText = leaveEncashment.toFixed(2) + ' د.إ';
+        document.getElementById('noticeAmount').innerText = noticeSalary.toFixed(2) + ' د.إ';
+        document.getElementById('totalAmount').innerText = totalPayable.toFixed(2) + ' د.إ';
+
+        document.getElementById('resultBoxIndemnity').style.display = 'block';
+        document.getElementById('printBtnIndemnity').style.display = 'flex';
+    }
+</script>
+
+</body>
+</html>
