@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ERP Salary & Indemnity System - Dashboard</title>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --bg-color: #f1f5f9;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #cbd5e1;
+            --table-header: #f8fafc;
+            --radius: 14px;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+        .container {
+            width: 100%;
+            max-width: 750px;
+        }
+        /* Auth Container Styling */
+        .auth-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            margin-top: 60px;
+        }
+        .auth-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .auth-header h2 {
+            font-size: 22px;
+            color: var(--text-main);
+            margin-bottom: 8px;
+        }
+        .auth-header p {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin: 0;
+        }
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 6px;
+        }
+        .form-control {
+            width: 100%;
+            padding: 12px 14px;
+            font-size: 13px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            outline: none;
+            box-sizing: border-box;
+            background: #ffffff;
+            color: var(--text-main);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+        }
+        .auth-btn {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.2s;
+        }
+        .auth-btn:hover {
+            background: var(--primary-hover);
+        }
+        .auth-switch {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+        .auth-switch a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .auth-switch a:hover {
+            text-decoration: underline;
+        }
+
+        /* Dashboard Styles */
+        .dashboard-container {
+            max-width: 750px;
+            width: 100%;
+            display: none;
+            margin: 0 auto;
+        }
+
+        /* Top Navigation & User Menu Bar */
+        .top-navbar {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 12px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow);
+        }
+        .nav-brand {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .user-menu-btn {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary);
+            border: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+        .user-menu-btn:hover {
+            background: rgba(99, 102, 241, 0.15);
+        }
+
+        /* User Menu Modal / Drawer */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+            box-sizing: border-box;
+            backdrop-filter: blur(2px);
+        }
+        .modal-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            width: 100%;
+            max-width: 400px;
+            padding: 24px;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+            position: relative;
+            animation: slideUp 0.3s ease;
+        }
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+            margin-bottom: 16px;
+        }
+        .modal-header h3 {
+            margin: 0;
+            font-size: 16px;
+            color: var(--text-main);
+        }
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 18px;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+        .profile-summary {
+            background: var(--bg-color);
+            padding: 12px 14px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-size: 12px;
+            border: 1px solid var(--border-color);
+        }
+        .profile-summary p {
+            margin: 6px 0;
+            color: var(--text-main);
+        }
+        .menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .menu-item-btn {
+            width: 100%;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            border-radius: 8px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-main);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.2s;
+        }
+        .menu-item-btn:hover {
+            background: rgba(99, 102, 241, 0.05);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        .menu-item-btn.danger {
+            color: #ef4444;
+            background: rgba(239, 68, 68, 0.05);
+            border-color: rgba(239, 68, 68, 0.2);
+        }
+        .menu-item-btn.danger:hover {
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        /* Tab Switcher for Tables */
+        .table-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            background: var(--card-bg);
+            font-size: 12px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            color: var(--text-muted);
+            text-align: center;
+            transition: all 0.2s;
+        }
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+        }
+
+        .welcome-banner {
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+            color: white;
+            border-radius: var(--radius);
+            padding: 18px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow);
+        }
+        .welcome-banner h2 {
+            font-size: 17px;
+            margin: 0 0 4px 0;
+        }
+        .welcome-banner p {
+            font-size: 12px;
+            margin: 0;
+            opacity: 0.9;
+        }
+        .widgets-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        @media (max-width: 600px) {
+            .widgets-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        .widget-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 12px;
+            box-shadow: var(--shadow);
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .widget-card i {
+            font-size: 18px;
+            color: var(--primary);
+        }
+        .widget-info div:first-child {
+            color: var(--text-muted);
+            font-size: 10px;
+        }
+        .widget-info div:last-child {
+            font-weight: 600;
+            color: var(--text-main);
+            font-size: 12px;
+        }
+
+        .section-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+        .table-header-wrap {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .dashboard-title {
+            font-size: 15px;
+            color: var(--text-main);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0;
+        }
+        .dashboard-title::before {
+            content: '';
+            display: inline-block;
+            width: 5px;
+            height: 15px;
+            background-color: var(--primary);
+            border-radius: 3px;
+        }
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 6px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--card-bg);
+            table-layout: fixed;
+        }
+        th, td {
+            padding: 10px 12px;
+            font-size: 12px;
+            color: var(--text-main);
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+        .dynamic-table th:nth-child(1), .dynamic-table td:nth-child(1) {
+            width: 65%;
+            text-align: left;
+        }
+        .dynamic-table th:nth-child(2), .dynamic-table td:nth-child(2) {
+            width: 35%;
+            text-align: right;
+        }
+        th {
+            background-color: var(--table-header);
+            color: var(--text-muted);
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+        }
+        td {
+            border-bottom: 1px solid var(--border-color);
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        td[contenteditable="true"] {
+            background-color: rgba(99, 102, 241, 0.05);
+            cursor: pointer;
+            border-radius: 4px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        td[contenteditable="true"]:focus {
+            background-color: #ffffff;
+            outline: 2px solid var(--primary);
+        }
+        .calculated-row {
+            background-color: rgba(14, 165, 233, 0.06) !important;
+            font-weight: 700;
+            color: #0284c7;
+        }
+        .locked-row {
+            background-color: rgba(100, 116, 139, 0.04) !important;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+        .action-btns {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .print-btn {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary);
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .print-btn:hover {
+            background: rgba(99, 102, 241, 0.2);
+        }
+        .error-msg {
+            color: #ef4444;
+            font-size: 12px;
+            margin-top: 8px;
+            text-align: center;
+        }
+        .select-input {
+            width: 100%;
+            padding: 4px 6px;
+            font-size: 11px;
+            font-weight: 600;
+            border: 1px solid var(--primary);
+            border-radius: 4px;
+            background: rgba(99, 102, 241, 0.05);
+            color: var(--primary);
+            outline: none;
+            text-align: right;
+        }
+
+        /* Professional Print Header Styling */
+        .print-only-header {
+            display: none;
+            text-align: center;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #cbd5e1;
+            padding-bottom: 8px;
+        }
+        .print-only-header h1 {
+            font-size: 14px;
+            margin: 0 0 4px 0;
+            color: #1e293b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .print-only-header p {
+            font-size: 9px;
+            color: #64748b;
+            margin: 0 0 4px 0;
+        }
+        .print-user-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+            font-weight: 700;
+            color: #0f172a;
+            background: #f1f5f9;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin-top: 4px;
+            border: 1px solid #cbd5e1;
+        }
+
+        /* Professional Print Footer Styling */
+        .print-only-footer {
+            display: none;
+            margin-top: 10px;
+            padding-top: 8px;
+            border-top: 1px solid #cbd5e1;
+            font-size: 9px;
+            color: #475569;
+            text-align: center;
+        }
+
+        /* Print Specific Styling */
+        @media print {
+            @page {
+                size: A5 landscape;
+                margin: 6mm;
+            }
+            body {
+                background: #ffffff !important;
+                padding: 0 !important;
+                color: #000000 !important;
+            }
+            .container > *:not(#dashboardContainer),
+            .top-navbar, 
+            .table-tabs, 
+            .welcome-banner, 
+            .widgets-grid, 
+            .action-btns {
+                display: none !important;
+            }
+            .dashboard-container {
+                display: block !important;
+                max-width: 100% !important;
+                margin: 0 !important;
+            }
+            .section-card {
+                border: none !important;
+                box-shadow: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            .print-section {
+                display: none !important;
+            }
+            .print-section.active-print {
+                display: block !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+            .print-only-header, .print-only-footer {
+                display: block !important;
+            }
+            .table-responsive {
+                border: 1px solid #94a3b8 !important;
+                box-shadow: none !important;
+                margin-bottom: 4px !important;
+                overflow: visible !important;
+            }
+            table, tr, td, th {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+                padding: 6px 8px !important;
+                font-size: 10px !important;
+            }
+            th {
+                background-color: #e2e8f0 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            td[contenteditable="true"] {
+                background-color: transparent !important;
+                color: #1e293b !important;
+            }
+            .select-input {
+                border: none;
+                background: transparent;
+                appearance: none;
+                text-align: right;
+                font-weight: 600;
+                color: #1e293b;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="authContainerWrapper">
+        <!-- Sign In Form -->
+        <div class="auth-card" id="signinCard">
+            <div class="auth-header">
+                <h2>Welcome Back</h2>
+                <p>Sign in to access your ERP Salary System Dashboard</p>
+            </div>
+            <form id="signinForm" onsubmit="handleSignIn(event)">
+                <div class="form-group">
+                    <label>ERP Number</label>
+                    <input type="text" id="signinErp" class="form-control" placeholder="Enter your ERP number" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="signinPassword" class="form-control" placeholder="Enter your password" required>
+                </div>
+                <div id="signinError" class="error-msg"></div>
+                <button type="submit" class="auth-btn">Sign In</button>
+            </form>
+            <div class="auth-switch">
+                Don't have an account? <a onclick="switchAuth('signup')">Sign Up</a>
+            </div>
+        </div>
+
+        <!-- Sign Up Form -->
+        <div class="auth-card" id="signupCard" style="display: none;">
+            <div class="auth-header">
+                <h2>Create Account</h2>
+                <p>Register a new account to get started</p>
+            </div>
+            <form id="signupForm" onsubmit="handleSignUp(event)">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="signupName" class="form-control" placeholder="Enter your full name" required>
+                </div>
+                <div class="form-group">
+                    <label>ERP Number</label>
+                    <input type="text" id="signupErp" class="form-control" placeholder="Enter your ERP number" required>
+                </div>
+                <div class="form-group">
+                    <label>Date of Join (DD/MM/YYYY)</label>
+                    <input type="date" id="signupDoj" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="signupPassword" class="form-control" placeholder="Create a password" required>
+                </div>
+                <div id="signupError" class="error-msg"></div>
+                <button type="submit" class="auth-btn">Sign Up</button>
+            </form>
+            <div class="auth-switch">
+                Already have an account? <a onclick="switchAuth('signin')">Sign In</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Container -->
+    <div class="dashboard-container" id="dashboardContainer">
+        
+        <!-- Top Navigation Bar with User Menu Button -->
+        <div class="top-navbar">
+            <div class="nav-brand">
+                <i class="fas fa-shield-alt"></i> ERP System
+            </div>
+            <button class="user-menu-btn" onclick="toggleUserMenu()">
+                <i class="fas fa-user-circle"></i> <span id="navUserName">Menu</span> <i class="fas fa-chevron-down" style="font-size: 10px;"></i>
+            </button>
+        </div>
+
+        <!-- User Menu Modal/Drawer -->
+        <div class="modal-overlay" id="userMenuModal">
+            <div class="modal-card">
+                <div class="modal-header">
+                    <h3>Menu</h3>
+                    <button class="close-modal" onclick="toggleUserMenu()">&times;</button>
+                </div>
+                <div class="profile-summary">
+                    <p><strong>Name:</strong> <span id="menuProfileName">-</span></p>
+                    <p><strong>ERP No:</strong> <span id="menuProfileErp">-</span></p>
+                    <p><strong>Date of Join:</strong> <span id="menuProfileDoj">-</span></p>
+                </div>
+                <div class="menu-links">
+                    <button class="menu-item-btn" onclick="openChangePasswordModal()">
+                        <i class="fas fa-key" style="color: var(--primary);"></i> Change Password
+                    </button>
+                    <button class="menu-item-btn" onclick="switchTableTab('salary')">
+                        <i class="fas fa-file-invoice-dollar" style="color: var(--primary);"></i> Employee Salary
+                    </button>
+                    <button class="menu-item-btn" onclick="switchTableTab('indemnity')">
+                        <i class="fas fa-balance-scale" style="color: var(--primary);"></i> Indemnity & Settlement
+                    </button>
+                    <button class="menu-item-btn danger" onclick="handleLogout()">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Change Password Modal -->
+        <div class="modal-overlay" id="changePasswordModal">
+            <div class="modal-card">
+                <div class="modal-header">
+                    <h3>Change Password</h3>
+                    <button class="close-modal" onclick="closeChangePasswordModal()">&times;</button>
+                </div>
+                <form onsubmit="handlePasswordChange(event)">
+                    <div class="form-group">
+                        <label>Current Password</label>
+                        <input type="password" id="currentPassInput" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>New Password</label>
+                        <input type="password" id="newPassInput" class="form-control" required>
+                    </div>
+                    <div id="passChangeError" class="error-msg"></div>
+                    <button type="submit" class="auth-btn">Update Password</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Welcome Greeting Banner -->
+        <div class="welcome-banner">
+            <h2 id="greetingTitle">Welcome!</h2>
+            <p id="userWelcomeSub">Here is your daily ERP performance summary.</p>
+        </div>
+
+        <!-- Widgets Grid -->
+        <div class="widgets-grid">
+            <div class="widget-card">
+                <i class="fas fa-map-marker-alt"></i>
+                <div class="widget-info">
+                    <div>Location</div>
+                    <div id="widgetLocation">Detecting...</div>
+                </div>
+            </div>
+            <div class="widget-card">
+                <i class="fas fa-calendar-day"></i>
+                <div class="widget-info">
+                    <div>Date & Time</div>
+                    <div id="widgetDateTime">Loading...</div>
+                </div>
+            </div>
+            <div class="widget-card">
+                <i class="fas fa-cloud-sun"></i>
+                <div class="widget-info">
+                    <div>Weather</div>
+                    <div id="widgetWeather">Loading...</div>
+                </div>
+            </div>
+            <div class="widget-card">
+                <i class="fas fa-umbrella-beach"></i>
+                <div class="widget-info">
+                    <div>Public Holiday</div>
+                    <div id="widgetHoliday">Checking...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Table View Switcher Tabs -->
+        <div class="table-tabs">
+            <button class="tab-btn active" id="tabSalaryBtn" onclick="switchTableTab('salary')">Employee Salary</button>
+            <button class="tab-btn" id="tabIndemnityBtn" onclick="switchTableTab('indemnity')">Indemnity & Settlement</button>
+        </div>
+
+        <div class="section-card" id="erpSectionCard">
+            
+            <!-- ERP Salary Section -->
+            <div id="salaryPrintWrapper" class="print-section active-print">
+                <div class="print-only-header">
+                    <h1>ERP Salary System</h1>
+                    <p>Official Monthly Salary Slip Statement</p>
+                    <div class="print-user-meta">
+                        <span id="printSalaryName">Employee Name: -</span>
+                        <span id="printSalaryErp">ERP Number: -</span>
+                    </div>
+                </div>
+                <div class="table-header-wrap">
+                    <h2 class="dashboard-title">ERP Salary System</h2>
+                    <div class="action-btns">
+                        <button class="print-btn" onclick="printSalarySlip()"><i class="fas fa-print"></i> Print</button>
+                    </div>
+                </div>
+                
+                <div class="table-responsive">
+                    <table id="tableERP" class="dynamic-table">
+                        <thead>
+                            <tr>
+                                <th>Description</th>
+                                <th style="text-align: right;">Value</th>
+                            </tr>
+                        </thead>
+                        <tbody id="erpTbody">
+                            <tr>
+                                <td>Basic Salary</td>
+                                <td contenteditable="true" id="basicSalaryInput" style="text-align: right;" oninput="onBasicSalaryChange()">1200.00</td>
+                            </tr>
+                            <tr>
+                                <td>Security Allowance</td>
+                                <td contenteditable="true" id="securityAllowanceInput" style="text-align: right;" oninput="calculateAll()">720.00</td>
+                            </tr>
+                            <tr class="locked-row">
+                                <td>Basic Working Days</td>
+                                <td id="basicWorkingDaysResult" style="text-align: right;">0</td>
+                            </tr>
+                            <tr class="locked-row">
+                                <td>Basic Working Days Salary</td>
+                                <td id="basicWorkingDaysSalaryResult" style="text-align: right;">0.00</td>
+                            </tr>
+                            <tr class="locked-row">
+                                <td>Basic Overtime Days</td>
+                                <td id="basicOtDaysResult" style="text-align: right;">0</td>
+                            </tr>
+                            <tr class="locked-row">
+                                <td>Basic Overtime Salary</td>
+                                <td id="basicOtSalaryResult" style="text-align: right;">0.00</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td>Absent Days</td>
+                                <td contenteditable="true" id="absentDaysInput" style="text-align: right;" oninput="calculateAll()">0</td>
+                            </tr>
+                            <tr>
+                                <td>Weekly/Holiday Working Days</td>
+                                <td contenteditable="true" id="otDaysInput" style="text-align: right;" oninput="calculateAll()">0</td>
+                            </tr>
+                            <tr class="locked-row">
+                                <td>Weekly/Holiday Salary</td>
+                                <td id="otResult" style="text-align: right;">0.00</td>
+                            </tr>
+                            <tr class="calculated-row">
+                                <td>Gross Salary</td>
+                                <td id="salaryOtTotalResult" style="text-align: right;">0.00</td>
+                            </tr>
+                            <tr>
+                                <td>Deduction</td>
+                                <td contenteditable="true" id="deductionInput" style="text-align: right;" oninput="calculateAll()">0</td>
+                            </tr>
+                            <tr class="calculated-row">
+                                <td>Net Payable Salary</td>
+                                <td id="netPayableResult" style="text-align: right;">0.00</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <!-- Professional Footer Message for Salary Slip -->
+                <div class="print-only-footer">
+                    <p><strong>System Generated Statement:</strong> This is an official digital salary slip generated by the ERP System. No physical signature or company stamp is required.</p>
+                </div>
+            </div>
+
+            <!--Indemnity & Settlement Section-->
+            <div id="indemnityPrintWrapper" class="print-section" style="display: none;">
+                <div class="print-only-header">
+                    <h1>Indemnity & Settlement</h1>
+                    <p>Official End of Service Settlement Statement</p>
+                    <div class="print-user-meta">
+                        <span id="printIndemnityName">Employee Name: -</span>
+                        <span id="printIndemnityErp">ERP Number: -</span>
+                    </div>
+                </div>
+                <div class="table-header-wrap">
+                    <h2 class="dashboard-title">Indemnity & Settlement</h2>
+                    <button class="print-btn" onclick="printIndemnityStatement()"><i class="fas fa-print"></i> Print</button>
+                </div>
+                <div class="table-responsive">
+                    <table id="tableIndemnity" class="dynamic-table">
+                        <thead>
+                            <tr>
+                                <th>Description</th>
+                                <th style="text-align: right;">Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="locked-row">
+                                <td>Date Of Join</td>
+                                <td id="indemnityDoj" style="text-align: right;">-</td>
+                            </tr>
+                            <tr>
+                                <td>Last Working Day</td>
+                                <td contenteditable="true" id="lastWorkingDayInput" style="text-align: right;" oninput="calculateAll()">-</td>
+                            </tr>
+                            <tr class="locked-row">
+                                <td>Total Service Years</td>
+                                <td id="indemnityServiceYears" style="text-align: right;">0.00</td>
+                            </tr>
+                            <tr class="locked-row">
+                                <td>Total Service Months</td>
+                                <td id="indemnityServiceMonths" style="text-align: right;">0.00</td>
+                            </tr>
+                            <tr class="locked-row">
+                                <td>Total Service Days</td>
+                                <td id="indemnityServiceDays" style="text-align: right;">0</td>
+                            </tr>
+                            <tr class="locked-row">
+                                <td>Total Indemnity Days</td>
+                                <td id="totalIndemnityDaysResult" style="text-align: right;">0.00</td>
+                            </tr>
+                            <tr class="locked-row">
+                                <td>Gratuity Amount</td>
+                                <td id="gratuityAmountResult" style="text-align: right;">0.00</td>
+                            </tr>
+                            <tr>
+                                <td>Balance Leave Days</td>
+                                <td contenteditable="true" id="balanceLeaveDaysInput" style="text-align: right;" oninput="calculateAll()">0</td>
+                            </tr>
+                            <tr class="locked-row">
+                                <td>Balance Leave Salary</td>
+                                <td id="balanceLeaveSalaryResult" style="text-align: right;">0.00</td>
+                            </tr>
+                            <tr>
+                                <td>Notice Period (Month)</td>
+                                <td contenteditable="true" id="noticePeriodInput" style="text-align: right;" oninput="calculateAll()">0</td>
+                            </tr>
+                            <tr>
+                                <td>Emergency Resign</td>
+                                <td style="text-align: right;">
+                                    <select id="emergencyResignSelect" class="select-input" onchange="calculateAll()">
+                                        <option value="No">No</option>
+                                        <option value="Yes">Yes</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr class="calculated-row">
+                                <td>Total Indemnity Amount</td>
+                                <td id="totalIndemnityResult" style="text-align: right;">0.00</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Professional Footer Message for Indemnity Statement -->
+                <div class="print-only-footer">
+                    <p><strong>System Generated Statement:</strong> This settlement statement is calculated in accordance with UAE Labour Law guidelines. This is computer-generated and requires no sign or stamp.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Helper function to format date from YYYY-MM-DD to DD/MM/YYYY
+        function formatDateToDDMMYYYY(dateString) {
+            if (!dateString) return '-';
+            let parts = dateString.split('-');
+            if (parts.length === 3) {
+                return `${parts[2]}/${parts[1]}/${parts[0]}`;
+            }
+            return dateString;
+        }
+
+        // Helper function to parse DD/MM/YYYY to Date object
+        function parseDDMMYYYYToDate(str) {
+            if (!str) return new Date();
+            let parts = str.split('/');
+            if (parts.length === 3) {
+                return new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
+            }
+            return new Date(str);
+        }
+
+        // Form Switching Logic
+        function switchAuth(type) {
+            if (type === 'signup') {
+                document.getElementById('signinCard').style.display = 'none';
+                document.getElementById('signupCard').style.display = 'block';
+            } else {
+                document.getElementById('signupCard').style.display = 'none';
+                document.getElementById('signinCard').style.display = 'block';
+            }
+            document.getElementById('signinError').innerText = '';
+            document.getElementById('signupError').innerText = '';
+        }
+
+        // Sign Up Handler
+        function handleSignUp(e) {
+            e.preventDefault();
+            let name = document.getElementById('signupName').value.trim();
+            let erpNo = document.getElementById('signupErp').value.trim();
+            let doj = document.getElementById('signupDoj').value; 
+            let password = document.getElementById('signupPassword').value;
+
+            let users = JSON.parse(localStorage.getItem('erpUsers')) || [];
+            let existingUser = users.find(u => u.erpNo === erpNo);
+            if (existingUser) {
+                document.getElementById('signupError').innerText = 'ERP Number already registered! Please sign in.';
+                return;
+            }
+
+            users.push({ name, erpNo, doj, password });
+            localStorage.setItem('erpUsers', JSON.stringify(users));
+            alert('Account created successfully! Please sign in.');
+            switchAuth('signin');
+        }
+
+        // Sign In Handler
+        function handleSignIn(e) {
+            e.preventDefault();
+            let erpNo = document.getElementById('signinErp').value.trim();
+            let password = document.getElementById('signinPassword').value;
+
+            let users = JSON.parse(localStorage.getItem('erpUsers')) || [];
+            let user = users.find(u => u.erpNo === erpNo && u.password === password);
+
+            if (!user) {
+                document.getElementById('signinError').innerText = 'Invalid ERP Number or password!';
+                return;
+            }
+
+            localStorage.setItem('currentErpUser', JSON.stringify(user));
+            showDashboard();
+        }
+
+        // Logout Handler
+        function handleLogout() {
+            localStorage.removeItem('currentErpUser');
+            document.getElementById('dashboardContainer').style.display = 'none';
+            document.getElementById('authContainerWrapper').style.display = 'block';
+            document.getElementById('userMenuModal').style.display = 'none';
+            document.getElementById('signinForm').reset();
+        }
+
+        // User Menu Toggle
+        function toggleUserMenu() {
+            let modal = document.getElementById('userMenuModal');
+            modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        // Change Password Modal Open/Close
+        function openChangePasswordModal() {
+            toggleUserMenu();
+            document.getElementById('changePasswordModal').style.display = 'flex';
+            document.getElementById('passChangeError').innerText = '';
+        }
+        function closeChangePasswordModal() {
+            document.getElementById('changePasswordModal').style.display = 'none';
+        }
+
+        // Handle Password Update
+        function handlePasswordChange(e) {
+            e.preventDefault();
+            let currentPass = document.getElementById('currentPassInput').value;
+            let newPass = document.getElementById('newPassInput').value;
+            let currentUser = JSON.parse(localStorage.getItem('currentErpUser'));
+            let users = JSON.parse(localStorage.getItem('erpUsers')) || [];
+
+            let userIndex = users.findIndex(u => u.erpNo === currentUser.erpNo);
+            if (userIndex !== -1 && users[userIndex].password === currentPass) {
+                users[userIndex].password = newPass;
+                currentUser.password = newPass;
+                localStorage.setItem('erpUsers', JSON.stringify(users));
+                localStorage.setItem('currentErpUser', JSON.stringify(currentUser));
+                alert('Password updated successfully!');
+                closeChangePasswordModal();
+            } else {
+                document.getElementById('passChangeError').innerText = 'Incorrect current password!';
+            }
+        }
+
+        // Switch Between Table Tabs
+        function switchTableTab(tab) {
+            let salaryWrap = document.getElementById('salaryPrintWrapper');
+            let indemnityWrap = document.getElementById('indemnityPrintWrapper');
+            let tabSalaryBtn = document.getElementById('tabSalaryBtn');
+            let tabIndemnityBtn = document.getElementById('tabIndemnityBtn');
+
+            if (tab === 'salary') {
+                salaryWrap.style.display = 'block';
+                salaryWrap.classList.add('active-print');
+                indemnityWrap.style.display = 'none';
+                indemnityWrap.classList.remove('active-print');
+                tabSalaryBtn.classList.add('active');
+                tabIndemnityBtn.classList.remove('active');
+            } else {
+                salaryWrap.style.display = 'none';
+                salaryWrap.classList.remove('active-print');
+                indemnityWrap.style.display = 'block';
+                indemnityWrap.classList.add('active-print');
+                tabIndemnityBtn.classList.add('active');
+                tabSalaryBtn.classList.remove('active');
+            }
+            // Close menu if open
+            document.getElementById('userMenuModal').style.display = 'none';
+        }
+
+        function showDashboard() {
+            document.getElementById('authContainerWrapper').style.display = 'none';
+            document.getElementById('dashboardContainer').style.display = 'block';
+            
+            loadUserGreetings();
+            initWidgets();
+            
+            let today = new Date();
+            let yyyy = today.getFullYear();
+            let mm = String(today.getMonth() + 1).padStart(2, '0');
+            let dd = String(today.getDate()).padStart(2, '0');
+            let todayFormatted = `${dd}/${mm}/${yyyy}`; // DD/MM/YYYY format
+            document.getElementById('lastWorkingDayInput').innerText = todayFormatted;
+
+            calculateAll();
+        }
+
+        window.onload = function() {
+            let currentUser = localStorage.getItem('currentErpUser');
+            if (currentUser) {
+                showDashboard();
+            }
+        };
+
+        function loadUserGreetings() {
+            let currentUser = JSON.parse(localStorage.getItem('currentErpUser'));
+            let name = (currentUser && currentUser.name && currentUser.name.trim() !== '') ? currentUser.name : 'Employee User';
+            let erpNo = (currentUser && currentUser.erpNo) ? currentUser.erpNo : '-';
+            let dojFormatted = (currentUser && currentUser.doj) ? formatDateToDDMMYYYY(currentUser.doj) : '-';
+            let hour = new Date().getHours();
+            let greeting = 'Welcome';
+
+            if (hour < 12) {
+                greeting = '☀ Good Morning';
+            } else if (hour < 17) {
+                greeting = '🌤 Good Afternoon';
+            } else {
+                greeting = '🌙 Good Evening';
+            }
+
+            document.getElementById('greetingTitle').innerText = `${greeting}, ${name}!`;
+            document.getElementById('navUserName').innerText = name.split(' ')[0];
+
+            // Populate User Menu Details
+            document.getElementById('menuProfileName').innerText = name;
+            document.getElementById('menuProfileErp').innerText = erpNo;
+            document.getElementById('menuProfileDoj').innerText = dojFormatted;
+            
+            if (currentUser && currentUser.doj) {
+                document.getElementById('indemnityDoj').innerText = dojFormatted;
+            }
+
+            // Populate Print Header Metadata
+            document.getElementById('printSalaryName').innerText = `Employee Name: ${name}`;
+            document.getElementById('printSalaryErp').innerText = `ERP Number: ${erpNo}`;
+            document.getElementById('printIndemnityName').innerText = `Employee Name: ${name}`;
+            document.getElementById('printIndemnityErp').innerText = `ERP Number: ${erpNo}`;
+        }
+
+        function initWidgets() {
+            updateDateTime();
+            setInterval(updateDateTime, 1000);
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    let lat = position.coords.latitude;
+                    let lon = position.coords.longitude;
+                    fetchLocationName(lat, lon);
+                    fetchWeather(lat, lon);
+                }, error => {
+                    document.getElementById('widgetLocation').innerText = 'Dubai, UAE';
+                    document.getElementById('widgetWeather').innerText = '34°C, Sunny';
+                });
+            } else {
+                document.getElementById('widgetLocation').innerText = 'Location unavailable';
+                document.getElementById('widgetWeather').innerText = '32°C, Clear';
+            }
+
+            checkPublicHoliday();
+        }
+
+        function updateDateTime() {
+            let now = new Date();
+            let optionsDate = { month: 'short', day: 'numeric', year: 'numeric' };
+            let dateStr = now.toLocaleDateString('en-US', optionsDate);
+            let timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+            document.getElementById('widgetDateTime').innerText = `${dateStr}, ${timeStr}`;
+        }
+
+        function fetchLocationName(lat, lon) {
+            fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`)
+                .then(res => res.json())
+                .then(data => {
+                    let city = data.address.city || data.address.town || data.address.state || 'Current Location';
+                    let country = data.address.country || '';
+                    document.getElementById('widgetLocation').innerText = `${city}, ${country}`;
+                })
+                .catch(() => {
+                    document.getElementById('widgetLocation').innerText = 'Accurate Location Active';
+                });
+        }
+
+        function fetchWeather(lat, lon) {
+            fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data && data.current_weather) {
+                        let temp = data.current_weather.temperature;
+                        document.getElementById('widgetWeather').innerText = `${temp}°C, Clear`;
+                    }
+                })
+                .catch(() => {
+                    document.getElementById('widgetWeather').innerText = '32°C, Pleasant';
+                });
+        }
+
+        function checkPublicHoliday() {
+            let now = new Date();
+            let month = now.getMonth() + 1;
+            let day = now.getDate();
+            if (month === 12 && day === 2) {
+                document.getElementById('widgetHoliday').innerText = 'National Day 🎉';
+            } else {
+                document.getElementById('widgetHoliday').innerText = 'No Holiday Today';
+            }
+        }
+
+        function getNum(val) {
+            let num = parseFloat(val);
+            return isNaN(num) ? 0 : num;
+        }
+
+        function getCalendarData() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth();
+            const todayDate = now.getDate();
+            const totalDaysInMonth = new Date(year, month + 1, 0).getDate();
+            
+            let totalSundays = 0;
+            let pastSundays = 0;
+
+            for (let d = 1; d <= totalDaysInMonth; d++) {
+                let checkDate = new Date(year, month, d);
+                if (checkDate.getDay() === 0) {
+                    totalSundays++;
+                    if (d <= todayDate) pastSundays++;
+                }
+            }
+
+            const workingDaysTotal = totalDaysInMonth - totalSundays;
+            const pastWorkingDays = todayDate - pastSundays;
+
+            return {
+                totalDays: totalDaysInMonth,
+                workingDaysTotal: workingDaysTotal > 0 ? workingDaysTotal : 1,
+                pastWorkingDays: pastWorkingDays >= 0 ? pastWorkingDays : 0
+            };
+        }
+
+        function onBasicSalaryChange() {
+            let baseSalaryRate = getNum(document.getElementById('basicSalaryInput').innerText);
+            let suggestedAllowance = baseSalaryRate * 0.60;
+            document.getElementById('securityAllowanceInput').innerText = suggestedAllowance.toFixed(2);
+            calculateAll();
+        }
+
+        function calculateAll() {
+            let cal = getCalendarData();
+            
+            let baseSalaryRate = getNum(document.getElementById('basicSalaryInput').innerText);
+            let securityAllowanceRate = getNum(document.getElementById('securityAllowanceInput').innerText);
+            let totalBaseAndAllowance = baseSalaryRate + securityAllowanceRate;
+
+            let absentDays = getNum(document.getElementById('absentDaysInput').innerText);
+            let effectivePastWorkingDays = cal.pastWorkingDays - absentDays;
+            if (effectivePastWorkingDays < 0) effectivePastWorkingDays = 0;
+            document.getElementById('basicWorkingDaysResult').innerText = effectivePastWorkingDays;
+
+            let dailyRate = totalBaseAndAllowance / cal.workingDaysTotal;
+
+            let basicWorkingDaysSalary = effectivePastWorkingDays * dailyRate;
+            document.getElementById('basicWorkingDaysSalaryResult').innerText = basicWorkingDaysSalary.toFixed(2);
+
+            let basicOtDays = effectivePastWorkingDays;
+            document.getElementById('basicOtDaysResult').innerText = basicOtDays;
+
+            let basicOtSalary = (342 / 26) * basicOtDays; 
+            document.getElementById('basicOtSalaryResult').innerText = basicOtSalary.toFixed(2);
+
+            let weeklyWorkingDaysInput = getNum(document.getElementById('otDaysInput').innerText);
+            let standardTotalBaseAndAllowance = 1200 + 720; 
+            let ratio = totalBaseAndAllowance / standardTotalBaseAndAllowance;
+            let weeklyPerDayRate = 73.25 * ratio; 
+            let weeklySalaryAmount = weeklyWorkingDaysInput * weeklyPerDayRate; 
+            document.getElementById('otResult').innerText = weeklySalaryAmount.toFixed(2);
+
+            let salaryOtTotal = basicWorkingDaysSalary + basicOtSalary + weeklySalaryAmount;
+            document.getElementById('salaryOtTotalResult').innerText = salaryOtTotal.toFixed(2);
+
+            let deduction = getNum(document.getElementById('deductionInput').innerText);
+            let netPayable = salaryOtTotal - deduction;
+            document.getElementById('netPayableResult').innerText = netPayable.toFixed(2);
+
+            // UAE Labour Law Indemnity & Settlement Calculation
+            let currentUser = JSON.parse(localStorage.getItem('currentErpUser'));
+            let dojString = (currentUser && currentUser.doj) ? currentUser.doj : "2024-01-01";
+            document.getElementById('indemnityDoj').innerText = formatDateToDDMMYYYY(dojString);
+
+            let lwdString = document.getElementById('lastWorkingDayInput').innerText.trim();
+            let dojDate = new Date(dojString);
+            let lwdDate = parseDDMMYYYYToDate(lwdString);
+
+            if (isNaN(lwdDate)) {
+                lwdDate = new Date();
+            }
+
+            let diffTime = lwdDate - dojDate;
+            let serviceYears = diffTime / (1000 * 60 * 60 * 24 * 365.25);
+            if (serviceYears < 0) serviceYears = 0;
+
+            document.getElementById('indemnityServiceYears').innerText = serviceYears.toFixed(2);
+            document.getElementById('indemnityServiceMonths').innerText = (serviceYears * 12).toFixed(2);
+            document.getElementById('indemnityServiceDays').innerText = Math.round(diffTime / (1000 * 60 * 60 * 24));
+
+            let basicSalaryForGratuity = baseSalaryRate > 0 ? baseSalaryRate : 1200;
+            let dailyBasicWage = basicSalaryForGratuity / 30;
+            let gratuityAmount = 0;
+            let totalIndemnityDays = 0;
+
+            if (serviceYears >= 1) {
+                if (serviceYears <= 5) {
+                    totalIndemnityDays = 21 * serviceYears;
+                } else {
+                    let firstFiveYearsDays = 21 * 5;
+                    let remainingYears = serviceYears - 5;
+                    let extraYearsDays = 30 * remainingYears;
+                    totalIndemnityDays = firstFiveYearsDays + extraYearsDays;
+                }
+
+                gratuityAmount = dailyBasicWage * totalIndemnityDays;
+
+                let maxCap = basicSalaryForGratuity * 24;
+                if (gratuityAmount > maxCap) {
+                    gratuityAmount = maxCap;
+                    totalIndemnityDays = 720;
+                }
+            } else {
+                totalIndemnityDays = 0;
+                gratuityAmount = 0;
+            }
+
+            document.getElementById('totalIndemnityDaysResult').innerText = totalIndemnityDays.toFixed(2);
+            document.getElementById('gratuityAmountResult').innerText = gratuityAmount.toFixed(2);
+
+            let balanceLeaveDays = getNum(document.getElementById('balanceLeaveDaysInput').innerText);
+            let balanceLeaveSalary = balanceLeaveDays * dailyBasicWage;
+            document.getElementById('balanceLeaveSalaryResult').innerText = balanceLeaveSalary.toFixed(2);
+
+            let noticeMonths = getNum(document.getElementById('noticePeriodInput').innerText);
+            let noticePeriodAmount = noticeMonths * (baseSalaryRate + securityAllowanceRate + 342);
+
+            let emergencyResignVal = document.getElementById('emergencyResignSelect').value;
+
+            let totalIndemnityAmount = gratuityAmount + balanceLeaveSalary;
+
+            if (emergencyResignVal === "Yes") {
+                totalIndemnityAmount -= baseSalaryRate;
+            } else {
+                totalIndemnityAmount += noticePeriodAmount;
+            }
+
+            document.getElementById('totalIndemnityResult').innerText = totalIndemnityAmount.toFixed(2);
+        }
+
+        // Custom Dynamic Document Title Setter for PDF Name during Print
+        function printSalarySlip() {
+            let currentUser = JSON.parse(localStorage.getItem('currentErpUser'));
+            let userName = (currentUser && currentUser.name) ? currentUser.name.replace(/[^a-zA-Z0-9]/g, '_') : 'Employee';
+            
+            const now = new Date();
+            let monthName = now.toLocaleString('en-US', { month: 'long' });
+            let yearNum = now.getFullYear();
+
+            document.title = `${userName}_${monthName}_${yearNum}_PaySlip`;
+
+            document.querySelectorAll('.print-section').forEach(el => {
+                el.classList.remove('active-print');
+                el.style.display = 'none';
+            });
+            let salaryWrap = document.getElementById('salaryPrintWrapper');
+            salaryWrap.classList.add('active-print');
+            salaryWrap.style.display = 'block';
+            
+            window.print();
+        }
+
+        function printIndemnityStatement() {
+            let currentUser = JSON.parse(localStorage.getItem('currentErpUser'));
+            let userName = (currentUser && currentUser.name) ? currentUser.name.replace(/[^a-zA-Z0-9]/g, '_') : 'Employee';
+
+            document.title = `${userName}_Indemnity_statements`;
+
+            document.querySelectorAll('.print-section').forEach(el => {
+                el.classList.remove('active-print');
+                el.style.display = 'none';
+            });
+            let indemnityWrap = document.getElementById('indemnityPrintWrapper');
+            indemnityWrap.classList.add('active-print');
+            indemnityWrap.style.display = 'block';
+            
+            window.print();
+        }
+    </script>
+</body>
+</html>
