@@ -890,18 +890,18 @@
                     </div>
                     <div class="form-group">
                         <label for="grossSalary"><i class="fa-solid fa-coins"></i> Monthly Gross Salary</label>
-                        <input type="number" id="grossSalary" placeholder="Enter gross salary" value="1920">
+                        <input type="number" id="grossSalary" placeholder="Enter gross salary" value="2262">
                     </div>
                 </div>
 
                 <div class="grid-row">
                     <div class="form-group">
                         <label for="joinDate"><i class="fa-solid fa-calendar-plus"></i> Date of Joining</label>
-                        <input type="date" id="joinDate" onchange="calculateServiceYears()">
+                        <input type="date" id="joinDate" onchange="calculateServiceYearsOnly()">
                     </div>
                     <div class="form-group">
                         <label for="endDate"><i class="fa-solid fa-calendar-xmark"></i> Last Working Day</label>
-                        <input type="date" id="endDate" onchange="calculateServiceYears()">
+                        <input type="date" id="endDate" onchange="calculateServiceYearsOnly()">
                     </div>
                 </div>
 
@@ -951,7 +951,7 @@
                     </div>
                     <div class="result-item">
                         <span>Service Duration:</span>
-                        <span id="serviceDurationText">--</span>
+                        <span id="serviceDurationString">--</span>
                     </div>
                     <div class="result-item">
                         <span>Indemnity / Gratuity:</span>
@@ -1129,7 +1129,7 @@
             document.getElementById('menuProfileDoj').innerText = currentUser.doj || '-';
             if(currentUser.doj) {
                 document.getElementById('joinDate').value = currentUser.doj;
-                calculateServiceYears();
+                calculateServiceYearsOnly(); // শুধু ইয়ার ক্যালকুলেট করে বসাবে, সেটলমেন্ট নয়
             }
         }
     }
@@ -1145,6 +1145,7 @@
         } else {
             indemnitySec.classList.add('active');
             salarySec.classList.remove('active');
+            calculateServiceYearsOnly(); // শুধুমাত্র ইয়ার্স বের করে রাখবে, রেজাল্ট বক্স হাইড থাকবে
         }
     }
 
@@ -1164,26 +1165,25 @@
         let totalFullMonthWorkingDays = 0;
         for (let day = 1; day <= totalDaysInMonth; day++) {
             const dateObj = new Date(year, month, day);
-            if (dateObj.getDay() !== 0) { // Sunday count বাদ দিয়ে
+            if (dateObj.getDay() !== 0) {
                 totalFullMonthWorkingDays++;
             }
         }
         totalWorkingDaysInMonth = totalFullMonthWorkingDays;
 
-        // আজকের দিন পর্যন্ত ওয়ার্কিং ডেজ ক্যালকুলেশন
         const now = new Date();
         let targetDayLimit = totalDaysInMonth;
         
         if (year === now.getFullYear() && month === now.getMonth()) {
             targetDayLimit = now.getDate();
         } else if (new Date(year, month, 1) > now) {
-            targetDayLimit = 0; // ভবিষ্যতের মাস হলে ০
+            targetDayLimit = 0;
         }
 
         let workingDaysTillToday = 0;
         for (let day = 1; day <= targetDayLimit; day++) {
             const dateObj = new Date(year, month, day);
-            if (dateObj.getDay() !== 0) { // রবিবার বাদে
+            if (dateObj.getDay() !== 0) {
                 workingDaysTillToday++;
             }
         }
@@ -1199,7 +1199,8 @@
         document.getElementById('otDays').value = basicDays;
     }
 
-    function calculateServiceYears() {
+    // শুধু সার্ভিস ইয়ার বের করার ফাংশন (অটো ক্যালকুলেট করে রেজাল্ট দেখাবে না)
+    function calculateServiceYearsOnly() {
         const joinDateVal = document.getElementById('joinDate').value;
         const endDateVal = document.getElementById('endDate').value;
 
@@ -1209,7 +1210,6 @@
         const end = new Date(endDateVal);
 
         if (end < start) {
-            alert("End Date cannot be earlier than Join Date!");
             return;
         }
 
@@ -1284,6 +1284,7 @@
         document.getElementById('printBtnSalary').style.display = 'flex';
     }
 
+    // সেটলমেন্ট ক্যালকুলেট বাটন প্রেস করলেই শুধুমাত্র হিসাব দেখাবে
     function calculateSettlement() {
         let currentUser = JSON.parse(localStorage.getItem('currentErpUser')) || {};
         const empName = currentUser.name || 'N/A';
@@ -1292,9 +1293,8 @@
         const grossSalary = parseFloat(document.getElementById('grossSalary').value) || basicSalary;
         let years = parseFloat(document.getElementById('years').value);
 
-        // যদি কোনো কারণে ইমপুটে years ফাঁকা থাকে তবে আবার ক্যালকুলেট করে নেবে
         if (isNaN(years)) {
-            calculateServiceYears();
+            calculateServiceYearsOnly();
             years = parseFloat(document.getElementById('years').value) || 0;
         }
 
