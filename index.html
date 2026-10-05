@@ -1290,7 +1290,14 @@
         const empErp = currentUser.erpNo || 'N/A';
         const basicSalary = parseFloat(document.getElementById('basicSalary').value) || 0;
         const grossSalary = parseFloat(document.getElementById('grossSalary').value) || basicSalary;
-        const years = parseFloat(document.getElementById('years').value) || 0;
+        let years = parseFloat(document.getElementById('years').value);
+
+        // যদি কোনো কারণে ইমপুটে years ফাঁকা থাকে তবে আবার ক্যালকুলেট করে নেবে
+        if (isNaN(years)) {
+            calculateServiceYears();
+            years = parseFloat(document.getElementById('years').value) || 0;
+        }
+
         const reason = document.getElementById('reason').value;
         const leaveDays = parseFloat(document.getElementById('leaveDays').value) || 0;
         const noticeMonths = parseFloat(document.getElementById('noticeMonths').value) || 0;
