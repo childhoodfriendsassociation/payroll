@@ -3,929 +3,1389 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comprehensive Payroll & Settlement Dashboard</title>
-    <!-- Google Fonts & FontAwesome -->
+    <title>ERP Salary & Indemnity System - Dashboard</title>
+    <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <style>
         :root {
-            --primary: #d32f2f;
-            --primary-dark: #b71c1c;
-            --bg-color: #f4f6f9;
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --bg-color: #f1f5f9;
             --card-bg: #ffffff;
-            --text-main: #2d3748;
-            --text-muted: #718096;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
             --border-color: #cbd5e1;
+            --table-header: #f8fafc;
+            --radius: 14px;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
         }
-
         body {
-            font-family: 'Times New Roman', Times, serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
             margin: 0;
-            padding: 10px;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+        .container {
+            width: 100%;
+            max-width: 750px;
+        }
+        /* Auth Container Styling */
+        .auth-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            margin-top: 60px;
+        }
+        .auth-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .auth-header h2 {
+            font-size: 22px;
+            color: var(--text-main);
+            margin-bottom: 8px;
+        }
+        .auth-header p {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin: 0;
+        }
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 6px;
+        }
+        .form-control {
+            width: 100%;
+            padding: 12px 14px;
+            font-size: 13px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            outline: none;
+            box-sizing: border-box;
+            background: #ffffff;
+            color: var(--text-main);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+        }
+        .auth-btn {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.2s;
+        }
+        .auth-btn:hover {
+            background: var(--primary-hover);
+        }
+        .auth-switch {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+        .auth-switch a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .auth-switch a:hover {
+            text-decoration: underline;
         }
 
+        /* Dashboard Styles */
         .dashboard-container {
-            max-width: 800px;
+            max-width: 750px;
+            width: 100%;
+            display: none;
             margin: 0 auto;
         }
 
-        /* Top Bar Info - Mobile Friendly */
-        .top-bar {
+        /* Top Navigation & User Menu Bar */
+        .top-navbar {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 12px 18px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: var(--card-bg);
-            padding: 10px 12px;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            margin-bottom: 12px;
-            font-size: 13px;
-            color: var(--text-muted);
-            flex-wrap: wrap;
-            gap: 8px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow);
         }
-
-        .top-bar div {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .top-bar i {
-            color: var(--primary);
-        }
-
-        /* Navigation Menu Bar / Dropdown Style */
-        .nav-bar {
-            background: var(--card-bg);
-            padding: 10px 12px;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            margin-bottom: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .nav-title {
-            font-weight: bold;
-            font-size: 14px;
-            color: var(--text-main);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .nav-dropdown-group {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex: 1;
-            justify-content: flex-end;
-        }
-
-        .nav-dropdown-group select {
-            width: 100%;
-            max-width: 220px;
-            padding: 8px 10px;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            font-family: inherit;
-            font-size: 14px;
-            font-weight: bold;
-            color: var(--primary);
-            background: #fff;
-            cursor: pointer;
-        }
-
-        /* Main Card */
-        .main-card {
-            background: var(--card-bg);
-            padding: 15px;
-            border-radius: 14px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.06);
-        }
-
-        @media(min-width: 600px) {
-            .main-card {
-                padding: 30px;
-            }
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #e2e8f0;
-            padding-bottom: 12px;
-        }
-
-        h2 {
-            color: var(--primary);
-            margin: 0;
-            font-size: 20px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-        }
-
-        @media(min-width: 600px) {
-            h2 { font-size: 26px; }
-        }
-
-        /* Grid Layout */
-        .grid-row {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 12px;
-        }
-
-        @media(min-width: 600px) {
-            .grid-row {
-                grid-template-columns: 1fr 1fr;
-                gap: 20px;
-            }
-        }
-
-        .form-group {
-            margin-bottom: 12px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 500;
-            font-size: 13px;
-            color: #4a5568;
-        }
-
-        @media(min-width: 600px) {
-            label { font-size: 14px; }
-        }
-
-        input, select {
-            width: 100%;
-            padding: 10px 12px;
-            box-sizing: border-box;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            font-size: 14px;
-            font-family: inherit;
-            transition: all 0.3s;
-            background: #fff;
-        }
-
-        input:focus, select:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.1);
-        }
-
-        .info-badge {
-            background: #fff5f5;
-            border-left: 4px solid var(--primary);
-            padding: 10px;
-            border-radius: 0 8px 8px 0;
-            margin-bottom: 15px;
-            font-size: 13px;
-            color: #c53030;
-            line-height: 1.4;
-        }
-
-        .btn-container {
-            display: flex;
-            gap: 10px;
-            flex-direction: column;
-            margin-top: 15px;
-        }
-
-        @media(min-width: 500px) {
-            .btn-container {
-                flex-direction: row;
-            }
-        }
-
-        .calc-btn, .print-btn {
-            padding: 12px;
-            width: 100%;
-            border-radius: 8px;
+        .nav-brand {
             font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            border: none;
-            transition: transform 0.2s, box-shadow 0.2s;
+            font-weight: 700;
+            color: var(--primary);
             display: flex;
             align-items: center;
-            justify-content: center;
             gap: 8px;
-            font-family: inherit;
         }
-
-        .calc-btn {
-            background: linear-gradient(135deg, #d32f2f, #b71c1c);
-            color: white;
-            box-shadow: 0 4px 12px rgba(211, 47, 47, 0.3);
-        }
-
-        .print-btn {
-            background: #2b6cb0;
-            color: white;
-            box-shadow: 0 4px 12px rgba(43, 108, 176, 0.3);
-            display: none;
-        }
-
-        .calc-btn:hover, .print-btn:hover {
-            transform: translateY(-2px);
-        }
-
-        /* Result Section */
-        .result-box {
-            margin-top: 20px;
-            background: #f8fafc;
-            border: 1px solid var(--border-color);
-            padding: 15px;
-            border-radius: 12px;
-            display: none;
-        }
-
-        @media(min-width: 600px) {
-            .result-box { padding: 20px; }
-        }
-
-        /* Professional Header */
-        .payslip-header {
-            text-align: center;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #d32f2f;
-            background: linear-gradient(to bottom, #fff5f5, transparent);
-            border-radius: 8px 8px 0 0;
-            padding-top: 10px;
-        }
-
-        .payslip-header h3 {
-            margin: 0;
-            color: #1a202c;
-            font-size: 18px;
-            letter-spacing: 1px;
-            font-weight: 800;
-        }
-
-        @media(min-width: 600px) {
-            .payslip-header h3 { font-size: 21px; }
-        }
-
-        .payslip-header h3 span {
-            color: #d32f2f;
-        }
-
-        .payslip-header p {
-            margin: 4px 0 0 0;
-            color: #4a5568;
+        .user-menu-btn {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary);
+            border: none;
+            padding: 8px 14px;
+            border-radius: 8px;
             font-size: 12px;
-            font-style: italic;
-            font-weight: 500;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+        .user-menu-btn:hover {
+            background: rgba(99, 102, 241, 0.15);
         }
 
-        .result-item {
+        /* User Menu Modal / Drawer */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+            box-sizing: border-box;
+            backdrop-filter: blur(2px);
+        }
+        .modal-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            width: 100%;
+            max-width: 400px;
+            padding: 24px;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+            position: relative;
+            animation: slideUp 0.3s ease;
+        }
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .modal-header {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 8px;
-            font-size: 14px;
-            gap: 10px;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+            margin-bottom: 16px;
         }
-
-        @media(min-width: 600px) {
-            .result-item { font-size: 15px; }
+        .modal-header h3 {
+            margin: 0;
+            font-size: 16px;
+            color: var(--text-main);
         }
-
-        .result-item span:first-child {
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 18px;
             color: var(--text-muted);
+            cursor: pointer;
         }
-
-        .result-item span:last-child {
+        .profile-summary {
+            background: var(--bg-color);
+            padding: 12px 14px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-size: 12px;
+            border: 1px solid var(--border-color);
+        }
+        .profile-summary p {
+            margin: 6px 0;
+            color: var(--text-main);
+        }
+        .menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .menu-item-btn {
+            width: 100%;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            border-radius: 8px;
+            text-align: left;
+            font-size: 12px;
             font-weight: 600;
             color: var(--text-main);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.2s;
+        }
+        .menu-item-btn:hover {
+            background: rgba(99, 102, 241, 0.05);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        .menu-item-btn.danger {
+            color: #ef4444;
+            background: rgba(239, 68, 68, 0.05);
+            border-color: rgba(239, 68, 68, 0.2);
+        }
+        .menu-item-btn.danger:hover {
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        /* Tab Switcher for Tables */
+        .table-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            background: var(--card-bg);
+            font-size: 12px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            color: var(--text-muted);
+            text-align: center;
+            transition: all 0.2s;
+        }
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+        }
+
+        .welcome-banner {
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+            color: white;
+            border-radius: var(--radius);
+            padding: 18px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow);
+        }
+        .welcome-banner h2 {
+            font-size: 17px;
+            margin: 0 0 4px 0;
+        }
+        .welcome-banner p {
+            font-size: 12px;
+            margin: 0;
+            opacity: 0.9;
+        }
+        .widgets-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        @media (max-width: 600px) {
+            .widgets-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        .widget-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 12px;
+            box-shadow: var(--shadow);
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .widget-card i {
+            font-size: 18px;
+            color: var(--primary);
+        }
+        .widget-info div:first-child {
+            color: var(--text-muted);
+            font-size: 10px;
+        }
+        .widget-info div:last-child {
+            font-weight: 600;
+            color: var(--text-main);
+            font-size: 12px;
+        }
+
+        .section-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+        .table-header-wrap {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .dashboard-title {
+            font-size: 15px;
+            color: var(--text-main);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0;
+        }
+        .dashboard-title::before {
+            content: '';
+            display: inline-block;
+            width: 5px;
+            height: 15px;
+            background-color: var(--primary);
+            border-radius: 3px;
+        }
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 6px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--card-bg);
+            table-layout: fixed;
+        }
+        th, td {
+            padding: 10px 12px;
+            font-size: 12px;
+            color: var(--text-main);
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+        .dynamic-table th:nth-child(1), .dynamic-table td:nth-child(1) {
+            width: 65%;
+            text-align: left;
+        }
+        .dynamic-table th:nth-child(2), .dynamic-table td:nth-child(2) {
+            width: 35%;
+            text-align: right;
+        }
+        th {
+            background-color: var(--table-header);
+            color: var(--text-muted);
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+        }
+        td {
+            border-bottom: 1px solid var(--border-color);
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        td[contenteditable="true"] {
+            background-color: rgba(99, 102, 241, 0.05);
+            cursor: pointer;
+            border-radius: 4px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        td[contenteditable="true"]:focus {
+            background-color: #ffffff;
+            outline: 2px solid var(--primary);
+        }
+        .calculated-row {
+            background-color: rgba(14, 165, 233, 0.06) !important;
+            font-weight: 700;
+            color: #0284c7;
+        }
+        .locked-row {
+            background-color: rgba(100, 116, 139, 0.04) !important;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+        .action-btns {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .print-btn {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary);
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .print-btn:hover {
+            background: rgba(99, 102, 241, 0.2);
+        }
+        .error-msg {
+            color: #ef4444;
+            font-size: 12px;
+            margin-top: 8px;
+            text-align: center;
+        }
+        .select-input {
+            width: 100%;
+            padding: 4px 6px;
+            font-size: 11px;
+            font-weight: 600;
+            border: 1px solid var(--primary);
+            border-radius: 4px;
+            background: rgba(99, 102, 241, 0.05);
+            color: var(--primary);
+            outline: none;
             text-align: right;
         }
 
-        .gross-row {
-            font-weight: 700 !important;
-            font-size: 14px !important;
-            color: #2b6cb0 !important;
-            border-top: 1px solid var(--border-color);
-            padding-top: 8px;
-            margin-top: 6px;
-        }
-
-        .deduction-row span:first-child, .deduction-row span:last-child {
-            color: #c53030 !important;
-        }
-
-        .total-row {
-            font-weight: 700 !important;
-            font-size: 16px !important;
-            color: var(--primary) !important;
-            border-top: 2px dashed var(--border-color);
-            padding-top: 8px;
-            margin-top: 8px;
-        }
-
-        .disclaimer-footer {
-            margin-top: 12px;
-            padding-top: 8px;
-            border-top: 1px solid #e2e8f0;
-            font-size: 10px;
-            color: #718096;
-            text-align: center;
-            font-style: italic;
-            line-height: 1.3;
-        }
-
-        .page-footer-disclaimer {
-            text-align: center;
-            margin-top: 15px;
-            font-size: 11px;
-            color: #718096;
-            font-style: italic;
-        }
-
-        /* Section Toggles */
-        .calculator-section {
+        /* Professional Print Header Styling */
+        .print-only-header {
             display: none;
+            text-align: center;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #cbd5e1;
+            padding-bottom: 8px;
         }
-        .calculator-section.active {
-            display: block;
+        .print-only-header h1 {
+            font-size: 14px;
+            margin: 0 0 4px 0;
+            color: #1e293b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .print-only-header p {
+            font-size: 9px;
+            color: #64748b;
+            margin: 0 0 4px 0;
+        }
+        .print-user-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+            font-weight: 700;
+            color: #0f172a;
+            background: #f1f5f9;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin-top: 4px;
+            border: 1px solid #cbd5e1;
         }
 
-        /* Print Setup: Strictly Optimized for 1-Page A4 Portrait */
+        /* Professional Print Footer Styling */
+        .print-only-footer {
+            display: none;
+            margin-top: 10px;
+            padding-top: 8px;
+            border-top: 1px solid #cbd5e1;
+            font-size: 9px;
+            color: #475569;
+            text-align: center;
+        }
+
+        /* Print Specific Styling */
         @media print {
             @page {
-                size: A4 portrait;
-                margin: 10mm;
+                size: A5 landscape;
+                margin: 6mm;
             }
-            body, html {
-                background: white;
-                padding: 0;
-                margin: 0;
-                width: 100%;
-                height: 100%;
-                overflow: hidden;
+            body {
+                background: #ffffff !important;
+                padding: 0 !important;
+                color: #000000 !important;
             }
-            .top-bar, .nav-bar, .form-group, .info-badge, .calc-btn, .print-btn, .page-footer-disclaimer, .header {
+            .container > *:not(#dashboardContainer),
+            .top-navbar, 
+            .table-tabs, 
+            .welcome-banner, 
+            .widgets-grid, 
+            .action-btns {
                 display: none !important;
             }
             .dashboard-container {
+                display: block !important;
                 max-width: 100% !important;
-                width: 100% !important;
                 margin: 0 !important;
-                padding: 0 !important;
             }
-            .main-card {
-                box-shadow: none !important;
+            .section-card {
                 border: none !important;
+                box-shadow: none !important;
                 padding: 0 !important;
                 margin: 0 !important;
             }
-            .calculator-section.active .result-box {
+            .print-section {
+                display: none !important;
+            }
+            .print-section.active-print {
                 display: block !important;
-                background: white !important;
-                border: 1px solid #333 !important;
-                border-radius: 0 !important;
-                padding: 12px 15px !important;
-                margin-top: 0 !important;
-                width: 100% !important;
-                box-sizing: border-box !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
             }
-            .payslip-header {
-                border-bottom: 2px solid #d32f2f !important;
-                background: none !important;
-                padding-bottom: 6px !important;
-                margin-bottom: 10px !important;
-                padding-top: 0 !important;
+            .print-only-header, .print-only-footer {
+                display: block !important;
             }
-            .payslip-header h3 {
-                color: #1a202c !important;
-                font-size: 16px !important;
+            .table-responsive {
+                border: 1px solid #94a3b8 !important;
+                box-shadow: none !important;
+                margin-bottom: 4px !important;
+                overflow: visible !important;
             }
-            .payslip-header h3 span {
-                color: #d32f2f !important;
-            }
-            .payslip-header p {
+            table, tr, td, th {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+                padding: 6px 8px !important;
                 font-size: 10px !important;
-                color: #4a5568 !important;
-                margin: 2px 0 0 0 !important;
             }
-            .result-item {
-                border-bottom: 1px solid #edf2f7;
-                padding-bottom: 4px !important;
-                margin-bottom: 5px !important;
-                font-size: 12px !important;
+            th {
+                background-color: #e2e8f0 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
             }
-            .gross-row {
-                border-top: 1px solid #333 !important;
-                color: #2b6cb0 !important;
-                padding-top: 4px !important;
-                margin-top: 4px !important;
+            td[contenteditable="true"] {
+                background-color: transparent !important;
+                color: #1e293b !important;
             }
-            .total-row {
-                border-top: 2px solid #000 !important;
-                color: #000 !important;
-                padding-top: 4px !important;
-                margin-top: 4px !important;
-                font-size: 14px !important;
-            }
-            .disclaimer-footer {
-                border-top: 1px solid #333 !important;
-                color: #333 !important;
-                display: block !important;
-                font-size: 9px !important;
-                margin-top: 8px !important;
-                padding-top: 4px !important;
+            .select-input {
+                border: none;
+                background: transparent;
+                appearance: none;
+                text-align: right;
+                font-weight: 600;
+                color: #1e293b;
             }
         }
     </style>
 </head>
 <body>
+    <div class="container" id="authContainerWrapper">
+        <!-- Sign In Form -->
+        <div class="auth-card" id="signinCard">
+            <div class="auth-header">
+                <h2>Welcome Back</h2>
+                <p>Sign in to access your ERP Salary System Dashboard</p>
+            </div>
+            <form id="signinForm" onsubmit="handleSignIn(event)">
+                <div class="form-group">
+                    <label>ERP Number</label>
+                    <input type="text" id="signinErp" class="form-control" placeholder="Enter your ERP number" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="signinPassword" class="form-control" placeholder="Enter your password" required>
+                </div>
+                <div id="signinError" class="error-msg"></div>
+                <button type="submit" class="auth-btn">Sign In</button>
+            </form>
+            <div class="auth-switch">
+                Don't have an account? <a onclick="switchAuth('signup')">Sign Up</a>
+            </div>
+        </div>
 
-<div class="dashboard-container">
-    <!-- Top Live Widget -->
-    <div class="top-bar">
-        <div><i class="fa-solid fa-location-dot"></i> <span id="locationText">Dubai, UAE</span></div>
-        <div><i class="fa-solid fa-calendar-days"></i> <span id="currentDate">--</span></div>
-        <div><i class="fa-solid fa-clock"></i> <span id="currentTime">--</span></div>
-    </div>
-
-    <!-- Navigation Menu Bar with Dropdown Switcher -->
-    <div class="nav-bar">
-        <div class="nav-title"><i class="fa-solid fa-bars-progress"></i> Calculator:</div>
-        <div class="nav-dropdown-group">
-            <select id="calculatorSwitcher" onchange="switchCalculator()">
-                <option value="salaryCalc">Monthly Salary</option>
-                <option value="indemnityCalc">End of Service</option>
-            </select>
+        <!-- Sign Up Form -->
+        <div class="auth-card" id="signupCard" style="display: none;">
+            <div class="auth-header">
+                <h2>Create Account</h2>
+                <p>Register a new account to get started</p>
+            </div>
+            <form id="signupForm" onsubmit="handleSignUp(event)">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="signupName" class="form-control" placeholder="Enter your full name" required>
+                </div>
+                <div class="form-group">
+                    <label>ERP Number</label>
+                    <input type="text" id="signupErp" class="form-control" placeholder="Enter your ERP number" required>
+                </div>
+                <div class="form-group">
+                    <label>Date of Join (DD/MM/YYYY)</label>
+                    <input type="date" id="signupDoj" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="signupPassword" class="form-control" placeholder="Create a password" required>
+                </div>
+                <div id="signupError" class="error-msg"></div>
+                <button type="submit" class="auth-btn">Sign Up</button>
+            </form>
+            <div class="auth-switch">
+                Already have an account? <a onclick="switchAuth('signin')">Sign In</a>
+            </div>
         </div>
     </div>
 
-    <!-- Main Content Card -->
-    <div class="main-card">
+    <!-- Dashboard Container -->
+    <div class="dashboard-container" id="dashboardContainer">
         
-        <!-- SECTION 1: MONTHLY SALARY CALCULATOR -->
-        <div id="salaryCalcSection" class="calculator-section active">
-            <div class="header">
-                <h2>Smart Payroll & Salary Dashboard</h2>
+        <!-- Top Navigation Bar with User Menu Button -->
+        <div class="top-navbar">
+            <div class="nav-brand">
+                <i class="fas fa-shield-alt"></i> ERP System
             </div>
+            <button class="user-menu-btn" onclick="toggleUserMenu()">
+                <i class="fas fa-user-circle"></i> <span id="navUserName">Menu</span> <i class="fas fa-chevron-down" style="font-size: 10px;"></i>
+            </button>
+        </div>
 
-            <!-- Employee Info Row -->
-            <div class="grid-row">
-                <div class="form-group">
-                    <label for="empNameSalary"><i class="fa-solid fa-user"></i> Employee Name:</label>
-                    <input type="text" id="empNameSalary" placeholder="Enter employee name">
+        <!-- User Menu Modal/Drawer -->
+        <div class="modal-overlay" id="userMenuModal">
+            <div class="modal-card">
+                <div class="modal-header">
+                    <h3>Menu</h3>
+                    <button class="close-modal" onclick="toggleUserMenu()">&times;</button>
                 </div>
-                <div class="form-group">
-                    <label for="empErpSalary"><i class="fa-solid fa-id-badge"></i> ERP ID:</label>
-                    <input type="text" id="empErpSalary" placeholder="Enter ERP ID">
+                <div class="profile-summary">
+                    <p><strong>Name:</strong> <span id="menuProfileName">-</span></p>
+                    <p><strong>ERP No:</strong> <span id="menuProfileErp">-</span></p>
+                    <p><strong>Date of Join:</strong> <span id="menuProfileDoj">-</span></p>
                 </div>
-            </div>
-
-            <div class="grid-row">
-                <div class="form-group">
-                    <label for="selectMonth"><i class="fa-solid fa-calendar"></i> Select Month:</label>
-                    <select id="selectMonth" onchange="updateMonthInfo()">
-                        <!-- Populated via JS -->
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="selectYear"><i class="fa-solid fa-calendar-alt"></i> Select Year:</label>
-                    <input type="number" id="selectYear" placeholder="e.g. 2026" onchange="updateMonthInfo()">
-                </div>
-            </div>
-
-            <div class="grid-row">
-                <div class="form-group">
-                    <label for="basicDaysInput"><i class="fa-solid fa-business-time"></i> Basic Duty Days Worked:</label>
-                    <input type="number" id="basicDaysInput" placeholder="Enter days" oninput="syncWorkingDaysToOT()">
-                </div>
-                <div class="form-group">
-                    <label for="otDays"><i class="fa-solid fa-business-time"></i> Basic Overtime Days:</label>
-                    <input type="number" step="any" id="otDays" placeholder="e.g. 2">
-                </div>
-            </div>
-
-            <div class="info-badge" id="autoInfoBadge">
-                <span id="badgeText"><i class="fa-solid fa-circle-info"></i> Please select month and year to view working days info.</span>
-            </div>
-
-            <div class="grid-row">
-                <div class="form-group">
-                    <label for="siteAllowanceInput"><i class="fa-solid fa-money-bill-wave"></i> Monthly Site Allowance (Fixed):</label>
-                    <input type="number" id="siteAllowanceInput" placeholder="e.g. 200">
-                </div>
-                <div class="form-group">
-                    <label for="holidays"><i class="fa-solid fa-umbrella-beach"></i> Holiday/Weekly Working Days:</label>
-                    <input type="number" step="any" id="holidays" placeholder="e.g. 1">
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label for="deductionInput"><i class="fa-solid fa-file-invoice-dollar"></i> Deduction Amount (Manual):</label>
-                <input type="number" step="any" id="deductionInput" placeholder="Enter deduction amount if any">
-            </div>
-
-            <div class="btn-container">
-                <button class="calc-btn" onclick="calculateSalary()"><i class="fa-solid fa-calculator"></i> Calculate Salary</button>
-                <button class="print-btn" id="printBtnSalary" onclick="window.print()"><i class="fa-solid fa-print"></i> Print Pay Slip</button>
-            </div>
-
-            <!-- Salary Result Box -->
-            <div class="result-box" id="resultBoxSalary">
-                <div class="payslip-header">
-                    <h3>UNOFFICIAL <span>SALARY STATEMENT</span></h3>
-                    <p>Monthly Earnings & Allowance Breakdown</p>
-                </div>
-                <div class="result-item">
-                    <span>Employee Name:</span>
-                    <span id="resEmpName">--</span>
-                </div>
-                <div class="result-item">
-                    <span>ERP ID:</span>
-                    <span id="resEmpErp">--</span>
-                </div>
-                <div class="result-item">
-                    <span>Selected Month & Year:</span>
-                    <span id="resMonthYear">--</span>
-                </div>
-                <div class="result-item">
-                    <span>Earned Basic Salary:</span>
-                    <span id="resBasic">0.00 د.إ</span>
-                </div>
-                <div class="result-item">
-                    <span>Earned Allowance:</span>
-                    <span id="resAllowance">0.00 د.إ</span>
-                </div>
-                <div class="result-item">
-                    <span>Earned Site Allowance:</span>
-                    <span id="resSiteAllowance">0.00 د.إ</span>
-                </div>
-                <div class="result-item">
-                    <span>Overtime Amount:</span>
-                    <span id="resOT">0.00 د.إ</span>
-                </div>
-                <div class="result-item">
-                    <span>Holiday/Weekly Working Amount:</span>
-                    <span id="resHoliday">0.00 د.إ</span>
-                </div>
-                <div class="result-item gross-row">
-                    <span>Gross Salary:</span>
-                    <span id="resGross">0.00 د.إ</span>
-                </div>
-                <div class="result-item deduction-row">
-                    <span>Total Deduction:</span>
-                    <span id="resDeduction">0.00 د.إ</span>
-                </div>
-                <div class="result-item total-row">
-                    <span>Net Payable Salary:</span>
-                    <span id="resTotal">0.00 د.إ</span>
-                </div>
-                <div class="disclaimer-footer">
-                    * Note: This is an unofficial calculation for personal reference only. No claims can be made to the company based on this statement.
+                <div class="menu-links">
+                    <button class="menu-item-btn" onclick="openChangePasswordModal()">
+                        <i class="fas fa-key" style="color: var(--primary);"></i> Change Password
+                    </button>
+                    <button class="menu-item-btn" onclick="switchTableTab('salary')">
+                        <i class="fas fa-file-invoice-dollar" style="color: var(--primary);"></i> Employee Salary
+                    </button>
+                    <button class="menu-item-btn" onclick="switchTableTab('indemnity')">
+                        <i class="fas fa-balance-scale" style="color: var(--primary);"></i> Indemnity & Settlement
+                    </button>
+                    <button class="menu-item-btn danger" onclick="handleLogout()">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
                 </div>
             </div>
         </div>
 
-        <!-- SECTION 2: END OF SERVICE & SETTLEMENT CALCULATOR -->
-        <div id="indemnityCalcSection" class="calculator-section">
-            <div class="header">
-                <h2>End of Service & Settlement</h2>
+        <!-- Change Password Modal -->
+        <div class="modal-overlay" id="changePasswordModal">
+            <div class="modal-card">
+                <div class="modal-header">
+                    <h3>Change Password</h3>
+                    <button class="close-modal" onclick="closeChangePasswordModal()">&times;</button>
+                </div>
+                <form onsubmit="handlePasswordChange(event)">
+                    <div class="form-group">
+                        <label>Current Password</label>
+                        <input type="password" id="currentPassInput" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>New Password</label>
+                        <input type="password" id="newPassInput" class="form-control" required>
+                    </div>
+                    <div id="passChangeError" class="error-msg"></div>
+                    <button type="submit" class="auth-btn">Update Password</button>
+                </form>
             </div>
+        </div>
 
-            <!-- Employee Info Row -->
-            <div class="grid-row">
-                <div class="form-group">
-                    <label for="empNameIndemnity"><i class="fa-solid fa-user"></i> Employee Name:</label>
-                    <input type="text" id="empNameIndemnity" placeholder="Enter employee name">
-                </div>
-                <div class="form-group">
-                    <label for="empErpIndemnity"><i class="fa-solid fa-id-badge"></i> ERP ID:</label>
-                    <input type="text" id="empErpIndemnity" placeholder="Enter ERP ID">
-                </div>
-            </div>
+        <!-- Welcome Greeting Banner -->
+        <div class="welcome-banner">
+            <h2 id="greetingTitle">Welcome!</h2>
+            <p id="userWelcomeSub">Here is your daily ERP performance summary.</p>
+        </div>
 
-            <div class="grid-row">
-                <div class="form-group">
-                    <label for="basicSalary"><i class="fa-solid fa-wallet"></i> Monthly Basic Salary</label>
-                    <input type="number" id="basicSalary" placeholder="Enter basic salary">
-                </div>
-                <div class="form-group">
-                    <label for="grossSalary"><i class="fa-solid fa-coins"></i> Monthly Gross Salary</label>
-                    <input type="number" id="grossSalary" placeholder="Enter gross salary">
-                </div>
-            </div>
-
-            <!-- Date Inputs for Auto Service Years Calculation -->
-            <div class="grid-row">
-                <div class="form-group">
-                    <label for="joinDate"><i class="fa-solid fa-calendar-plus"></i> Date of Joining</label>
-                    <input type="date" id="joinDate" onchange="calculateServiceYears()">
-                </div>
-                <div class="form-group">
-                    <label for="endDate"><i class="fa-solid fa-calendar-xmark"></i> Last Working Day</label>
-                    <input type="date" id="endDate" onchange="calculateServiceYears()">
+        <!-- Widgets Grid -->
+        <div class="widgets-grid">
+            <div class="widget-card">
+                <i class="fas fa-map-marker-alt"></i>
+                <div class="widget-info">
+                    <div>Location</div>
+                    <div id="widgetLocation">Detecting...</div>
                 </div>
             </div>
-
-            <div class="grid-row">
-                <div class="form-group">
-                    <label for="years"><i class="fa-solid fa-hourglass-half"></i> Years of Service (Auto)</label>
-                    <input type="number" step="0.01" id="years" placeholder="e.g., 3.5">
-                </div>
-                <div class="form-group">
-                    <label for="reason"><i class="fa-solid fa-right-from-bracket"></i> Reason of Leaving</label>
-                    <select id="reason">
-                        <option value="resignation">Resignation by Employee</option>
-                        <option value="termination">Company Termination</option>
-                    </select>
+            <div class="widget-card">
+                <i class="fas fa-calendar-day"></i>
+                <div class="widget-info">
+                    <div>Date & Time</div>
+                    <div id="widgetDateTime">Loading...</div>
                 </div>
             </div>
-
-            <div class="grid-row">
-                <div class="form-group">
-                    <label for="leaveDays"><i class="fa-solid fa-plane-departure"></i> Unused Leave Balance (Days)</label>
-                    <input type="number" step="0.5" id="leaveDays" placeholder="e.g., 15">
-                </div>
-                <div class="form-group">
-                    <label for="noticeMonths"><i class="fa-solid fa-file-invoice"></i> Notice Period / Pending Salary (Months)</label>
-                    <input type="number" step="0.1" id="noticeMonths" placeholder="e.g., 1">
+            <div class="widget-card">
+                <i class="fas fa-cloud-sun"></i>
+                <div class="widget-info">
+                    <div>Weather</div>
+                    <div id="widgetWeather">Loading...</div>
                 </div>
             </div>
-
-            <div class="btn-container">
-                <button class="calc-btn" onclick="calculateSettlement()"><i class="fa-solid fa-calculator"></i> Calculate Settlement</button>
-                <button class="print-btn" id="printBtnIndemnity" onclick="window.print()"><i class="fa-solid fa-print"></i> Print Settlement</button>
-            </div>
-
-            <!-- Settlement Result Box -->
-            <div class="result-box" id="resultBoxIndemnity">
-                <div class="payslip-header">
-                    <h3>SETTLEMENT <span>BREAKDOWN STATEMENT</span></h3>
-                    <p>End of Service Benefits Overview</p>
-                </div>
-                <div class="result-item">
-                    <span>Employee Name:</span>
-                    <span id="resEmpNameIndemnity">--</span>
-                </div>
-                <div class="result-item">
-                    <span>ERP ID:</span>
-                    <span id="resEmpErpIndemnity">--</span>
-                </div>
-                <div class="result-item">
-                    <span>Service Duration:</span>
-                    <span id="serviceDurationText">--</span>
-                </div>
-                <div class="result-item">
-                    <span>Indemnity / Gratuity:</span>
-                    <span id="indemnityAmount">0.00 د.إ</span>
-                </div>
-                <div class="result-item">
-                    <span>Leave Encashment:</span>
-                    <span id="leaveAmount">0.00 د.إ</span>
-                </div>
-                <div class="result-item">
-                    <span>Notice/Pending Salary:</span>
-                    <span id="noticeAmount">0.00 د.إ</span>
-                </div>
-                <div class="result-item total-row">
-                    <span>Total Payable Amount:</span>
-                    <span id="totalAmount">0.00 د.إ</span>
-                </div>
-                <div class="disclaimer-footer">
-                    * Note: Unofficial personal estimate. Not valid for formal company claims.
+            <div class="widget-card">
+                <i class="fas fa-umbrella-beach"></i>
+                <div class="widget-info">
+                    <div>Public Holiday</div>
+                    <div id="widgetHoliday">Checking...</div>
                 </div>
             </div>
         </div>
 
+        <!-- Table View Switcher Tabs -->
+        <div class="table-tabs">
+            <button class="tab-btn active" id="tabSalaryBtn" onclick="switchTableTab('salary')">Employee Salary</button>
+            <button class="tab-btn" id="tabIndemnityBtn" onclick="switchTableTab('indemnity')">Indemnity & Settlement</button>
+        </div>
+
+        <div class="section-card" id="erpSectionCard">
+            
+            <!-- ERP Salary Section -->
+            <div id="salaryPrintWrapper" class="print-section active-print">
+                <div class="print-only-header">
+                    <h1>ERP Salary System</h1>
+                    <p>Official Monthly Salary Slip Statement</p>
+                    <div class="print-user-meta">
+                        <span id="printSalaryName">Employee Name: -</span>
+                        <span id="printSalaryErp">ERP Number: -</span>
+                    </div>
+                </div>
+                <div class="table-header-wrap">
+                    <h2 class="dashboard-title">ERP Salary System</h2>
+                    <div class="action-btns">
+                        <button class="print-btn" onclick="printSalarySlip()"><i class="fas fa-print"></i> Print</button>
+                    </div>
+                </div>
+                
+                <div class="table-responsive">
+                    <table id="tableERP" class="dynamic-table">
+                        <thead>
+                            <tr>
+                                <th>Description</th>
+                                <th style="text-align: right;">Value</th>
+                            </tr>
+                        </thead>
+                        <tbody id="erpTbody">
+                            <tr>
+                                <td>Basic Salary</td>
+                                <td contenteditable="true" id="basicSalaryInput" style="text-align: right;" oninput="onBasicSalaryChange()">1200.00</td>
+                            </tr>
+                            <tr>
+                                <td>Security Allowance</td>
+                                <td contenteditable="true" id="securityAllowanceInput" style="text-align: right;" oninput="calculateAll()">720.00</td>
+                            </tr>
+                            <tr class="locked-row">
+                                <td>Basic Working Days</td>
+                                <td id="basicWorkingDaysResult" style="text-align: right;">0</td>
+                            </tr>
+                            <tr class="locked-row">
+                                <td>Basic Working Days Salary</td>
+                                <td id="basicWorkingDaysSalaryResult" style="text-align: right;">0.00</td>
+                            </tr>
+                            <tr class="locked-row">
+                                <td>Basic Overtime Days</td>
+                                <td id="basicOtDaysResult" style="text-align: right;">0</td>
+                            </tr>
+                            <tr class="locked-row">
+                                <td>Basic Overtime Salary</td>
+                                <td id="basicOtSalaryResult" style="text-align: right;">0.00</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td>Absent Days</td>
+                                <td contenteditable="true" id="absentDaysInput" style="text-align: right;" oninput="calculateAll()">0</td>
+                            </tr>
+                            <tr>
+                                <td>Weekly/Holiday Working Days</td>
+                                <td contenteditable="true" id="otDaysInput" style="text-align: right;" oninput="calculateAll()">0</td>
+                            </tr>
+                            <tr class="locked-row">
+                                <td>Weekly/Holiday Salary</td>
+                                <td id="otResult" style="text-align: right;">0.00</td>
+                            </tr>
+                            <tr class="calculated-row">
+                                <td>Gross Salary</td>
+                                <td id="salaryOtTotalResult" style="text-align: right;">0.00</td>
+                            </tr>
+                            <tr>
+                                <td>Deduction</td>
+                                <td contenteditable="true" id="deductionInput" style="text-align: right;" oninput="calculateAll()">0</td>
+                            </tr>
+                            <tr class="calculated-row">
+                                <td>Net Payable Salary</td>
+                                <td id="netPayableResult" style="text-align: right;">0.00</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <!-- Professional Footer Message for Salary Slip -->
+                <div class="print-only-footer">
+                    <p><strong>System Generated Statement:</strong> This is an official digital salary slip generated by the ERP System. No physical signature or company stamp is required.</p>
+                </div>
+            </div>
+
+            <!--Indemnity & Settlement Section-->
+            <div id="indemnityPrintWrapper" class="print-section" style="display: none;">
+                <div class="print-only-header">
+                    <h1>Indemnity & Settlement</h1>
+                    <p>Official End of Service Settlement Statement</p>
+                    <div class="print-user-meta">
+                        <span id="printIndemnityName">Employee Name: -</span>
+                        <span id="printIndemnityErp">ERP Number: -</span>
+                    </div>
+                </div>
+                <div class="table-header-wrap">
+                    <h2 class="dashboard-title">Indemnity & Settlement</h2>
+                    <button class="print-btn" onclick="printIndemnityStatement()"><i class="fas fa-print"></i> Print</button>
+                </div>
+                <div class="table-responsive">
+                    <table id="tableIndemnity" class="dynamic-table">
+                        <thead>
+                            <tr>
+                                <th>Description</th>
+                                <th style="text-align: right;">Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="locked-row">
+                                <td>Date Of Join</td>
+                                <td id="indemnityDoj" style="text-align: right;">-</td>
+                            </tr>
+                            <tr>
+                                <td>Last Working Day</td>
+                                <td contenteditable="true" id="lastWorkingDayInput" style="text-align: right;" oninput="calculateAll()">-</td>
+                            </tr>
+                            <tr class="locked-row">
+                                <td>Total Service Years</td>
+                                <td id="indemnityServiceYears" style="text-align: right;">0.00</td>
+                            </tr>
+                            <tr class="locked-row">
+                                <td>Total Service Months</td>
+                                <td id="indemnityServiceMonths" style="text-align: right;">0.00</td>
+                            </tr>
+                            <tr class="locked-row">
+                                <td>Total Service Days</td>
+                                <td id="indemnityServiceDays" style="text-align: right;">0</td>
+                            </tr>
+                            <tr class="locked-row">
+                                <td>Total Indemnity Days</td>
+                                <td id="totalIndemnityDaysResult" style="text-align: right;">0.00</td>
+                            </tr>
+                            <tr class="locked-row">
+                                <td>Gratuity Amount</td>
+                                <td id="gratuityAmountResult" style="text-align: right;">0.00</td>
+                            </tr>
+                            <tr>
+                                <td>Balance Leave Days</td>
+                                <td contenteditable="true" id="balanceLeaveDaysInput" style="text-align: right;" oninput="calculateAll()">0</td>
+                            </tr>
+                            <tr class="locked-row">
+                                <td>Balance Leave Salary</td>
+                                <td id="balanceLeaveSalaryResult" style="text-align: right;">0.00</td>
+                            </tr>
+                            <tr>
+                                <td>Notice Period (Month)</td>
+                                <td contenteditable="true" id="noticePeriodInput" style="text-align: right;" oninput="calculateAll()">0</td>
+                            </tr>
+                            <tr>
+                                <td>Emergency Resign</td>
+                                <td style="text-align: right;">
+                                    <select id="emergencyResignSelect" class="select-input" onchange="calculateAll()">
+                                        <option value="No">No</option>
+                                        <option value="Yes">Yes</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr class="calculated-row">
+                                <td>Total Indemnity Amount</td>
+                                <td id="totalIndemnityResult" style="text-align: right;">0.00</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Professional Footer Message for Indemnity Statement -->
+                <div class="print-only-footer">
+                    <p><strong>System Generated Statement:</strong> This settlement statement is calculated in accordance with UAE Labour Law guidelines. This is computer-generated and requires no sign or stamp.</p>
+                </div>
+            </div>
+
+        </div>
     </div>
 
-    <!-- Page Footer Disclaimer -->
-    <div class="page-footer-disclaimer">
-        * Unofficial personal estimate. Not valid for company claims.
-    </div>
-</div>
-
-<script>
-    let totalWorkingDaysInMonth = 26;
-    const monthsData = [
-        "January", "February", "March", "April", "May", "June", 
-        "July", "August", "September", "October", "November", "December"
-    ];
-
-    function populateMonths() {
-        const select = document.getElementById('selectMonth');
-        select.innerHTML = "<option value='' disabled selected>Select Month</option>";
-        monthsData.forEach((name, index) => {
-            const opt = document.createElement('option');
-            opt.value = index;
-            opt.textContent = name;
-            select.appendChild(opt);
-        });
-    }
-
-    function updateLiveClock() {
-        const now = new Date();
-        document.getElementById('currentTime').innerText = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
-        const options = { year: 'numeric', month: 'short', day: 'numeric', weekday: 'short' };
-        document.getElementById('currentDate').innerText = now.toLocaleDateString('en-US', options);
-    }
-    setInterval(updateLiveClock, 1000);
-    updateLiveClock();
-
-    window.onload = function() {
-        populateMonths();
-        document.getElementById('selectYear').value = new Date().getFullYear();
-        document.getElementById('endDate').valueAsDate = new Date();
-    };
-
-    function switchCalculator() {
-        const selectedVal = document.getElementById('calculatorSwitcher').value;
-        const salarySec = document.getElementById('salaryCalcSection');
-        const indemnitySec = document.getElementById('indemnityCalcSection');
-
-        if (selectedVal === 'salaryCalc') {
-            salarySec.classList.add('active');
-            indemnitySec.classList.remove('active');
-        } else {
-            indemnitySec.classList.add('active');
-            salarySec.classList.remove('active');
-        }
-    }
-
-    function updateMonthInfo() {
-        const yearInput = document.getElementById('selectYear').value;
-        const monthSelect = document.getElementById('selectMonth').value;
-
-        if (yearInput === "" || monthSelect === "") {
-            document.getElementById('badgeText').innerHTML = `<i class="fa-solid fa-circle-info"></i> Please select month and year to view working days info.`;
-            return;
+    <script>
+        // Helper function to format date from YYYY-MM-DD to DD/MM/YYYY
+        function formatDateToDDMMYYYY(dateString) {
+            if (!dateString) return '-';
+            let parts = dateString.split('-');
+            if (parts.length === 3) {
+                return `${parts[2]}/${parts[1]}/${parts[0]}`;
+            }
+            return dateString;
         }
 
-        const year = parseInt(yearInput);
-        const month = parseInt(monthSelect);
-        const totalDays = new Date(year, month + 1, 0).getDate();
-        
-        let sundayCount = 0;
-        for (let day = 1; day <= totalDays; day++) {
-            const dateObj = new Date(year, month, day);
-            if (dateObj.getDay() === 0) {
-                sundayCount++;
+        // Helper function to parse DD/MM/YYYY to Date object
+        function parseDDMMYYYYToDate(str) {
+            if (!str) return new Date();
+            let parts = str.split('/');
+            if (parts.length === 3) {
+                return new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
+            }
+            return new Date(str);
+        }
+
+        // Form Switching Logic
+        function switchAuth(type) {
+            if (type === 'signup') {
+                document.getElementById('signinCard').style.display = 'none';
+                document.getElementById('signupCard').style.display = 'block';
+            } else {
+                document.getElementById('signupCard').style.display = 'none';
+                document.getElementById('signinCard').style.display = 'block';
+            }
+            document.getElementById('signinError').innerText = '';
+            document.getElementById('signupError').innerText = '';
+        }
+
+        // Sign Up Handler
+        function handleSignUp(e) {
+            e.preventDefault();
+            let name = document.getElementById('signupName').value.trim();
+            let erpNo = document.getElementById('signupErp').value.trim();
+            let doj = document.getElementById('signupDoj').value; 
+            let password = document.getElementById('signupPassword').value;
+
+            let users = JSON.parse(localStorage.getItem('erpUsers')) || [];
+            let existingUser = users.find(u => u.erpNo === erpNo);
+            if (existingUser) {
+                document.getElementById('signupError').innerText = 'ERP Number already registered! Please sign in.';
+                return;
+            }
+
+            users.push({ name, erpNo, doj, password });
+            localStorage.setItem('erpUsers', JSON.stringify(users));
+            alert('Account created successfully! Please sign in.');
+            switchAuth('signin');
+        }
+
+        // Sign In Handler
+        function handleSignIn(e) {
+            e.preventDefault();
+            let erpNo = document.getElementById('signinErp').value.trim();
+            let password = document.getElementById('signinPassword').value;
+
+            let users = JSON.parse(localStorage.getItem('erpUsers')) || [];
+            let user = users.find(u => u.erpNo === erpNo && u.password === password);
+
+            if (!user) {
+                document.getElementById('signinError').innerText = 'Invalid ERP Number or password!';
+                return;
+            }
+
+            localStorage.setItem('currentErpUser', JSON.stringify(user));
+            showDashboard();
+        }
+
+        // Logout Handler
+        function handleLogout() {
+            localStorage.removeItem('currentErpUser');
+            document.getElementById('dashboardContainer').style.display = 'none';
+            document.getElementById('authContainerWrapper').style.display = 'block';
+            document.getElementById('userMenuModal').style.display = 'none';
+            document.getElementById('signinForm').reset();
+        }
+
+        // User Menu Toggle
+        function toggleUserMenu() {
+            let modal = document.getElementById('userMenuModal');
+            modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        // Change Password Modal Open/Close
+        function openChangePasswordModal() {
+            toggleUserMenu();
+            document.getElementById('changePasswordModal').style.display = 'flex';
+            document.getElementById('passChangeError').innerText = '';
+        }
+        function closeChangePasswordModal() {
+            document.getElementById('changePasswordModal').style.display = 'none';
+        }
+
+        // Handle Password Update
+        function handlePasswordChange(e) {
+            e.preventDefault();
+            let currentPass = document.getElementById('currentPassInput').value;
+            let newPass = document.getElementById('newPassInput').value;
+            let currentUser = JSON.parse(localStorage.getItem('currentErpUser'));
+            let users = JSON.parse(localStorage.getItem('erpUsers')) || [];
+
+            let userIndex = users.findIndex(u => u.erpNo === currentUser.erpNo);
+            if (userIndex !== -1 && users[userIndex].password === currentPass) {
+                users[userIndex].password = newPass;
+                currentUser.password = newPass;
+                localStorage.setItem('erpUsers', JSON.stringify(users));
+                localStorage.setItem('currentErpUser', JSON.stringify(currentUser));
+                alert('Password updated successfully!');
+                closeChangePasswordModal();
+            } else {
+                document.getElementById('passChangeError').innerText = 'Incorrect current password!';
             }
         }
 
-        totalWorkingDaysInMonth = totalDays - sundayCount;
-        document.getElementById('basicDaysInput').value = totalWorkingDaysInMonth;
-        document.getElementById('otDays').value = totalWorkingDaysInMonth;
+        // Switch Between Table Tabs
+        function switchTableTab(tab) {
+            let salaryWrap = document.getElementById('salaryPrintWrapper');
+            let indemnityWrap = document.getElementById('indemnityPrintWrapper');
+            let tabSalaryBtn = document.getElementById('tabSalaryBtn');
+            let tabIndemnityBtn = document.getElementById('tabIndemnityBtn');
 
-        document.getElementById('badgeText').innerHTML = `<i class="fa-solid fa-circle-info"></i> Total Days in Month: <strong>${totalDays}</strong> | Standard Working Days (Excl. Sundays): <strong>${totalWorkingDaysInMonth}</strong>`;
-    }
-
-    function syncWorkingDaysToOT() {
-        const basicDays = document.getElementById('basicDaysInput').value;
-        document.getElementById('otDays').value = basicDays;
-    }
-
-    function calculateServiceYears() {
-        const joinDateVal = document.getElementById('joinDate').value;
-        const endDateVal = document.getElementById('endDate').value;
-
-        if (!joinDateVal || !endDateVal) return;
-
-        const start = new Date(joinDateVal);
-        const end = new Date(endDateVal);
-
-        if (end < start) {
-            alert("End Date cannot be earlier than Join Date!");
-            return;
+            if (tab === 'salary') {
+                salaryWrap.style.display = 'block';
+                salaryWrap.classList.add('active-print');
+                indemnityWrap.style.display = 'none';
+                indemnityWrap.classList.remove('active-print');
+                tabSalaryBtn.classList.add('active');
+                tabIndemnityBtn.classList.remove('active');
+            } else {
+                salaryWrap.style.display = 'none';
+                salaryWrap.classList.remove('active-print');
+                indemnityWrap.style.display = 'block';
+                indemnityWrap.classList.add('active-print');
+                tabIndemnityBtn.classList.add('active');
+                tabSalaryBtn.classList.remove('active');
+            }
+            // Close menu if open
+            document.getElementById('userMenuModal').style.display = 'none';
         }
 
-        let years = end.getFullYear() - start.getFullYear();
-        let months = end.getMonth() - start.getMonth();
-        let days = end.getDate() - start.getDate();
+        function showDashboard() {
+            document.getElementById('authContainerWrapper').style.display = 'none';
+            document.getElementById('dashboardContainer').style.display = 'block';
+            
+            loadUserGreetings();
+            initWidgets();
+            
+            let today = new Date();
+            let yyyy = today.getFullYear();
+            let mm = String(today.getMonth() + 1).padStart(2, '0');
+            let dd = String(today.getDate()).padStart(2, '0');
+            let todayFormatted = `${dd}/${mm}/${yyyy}`; // DD/MM/YYYY format
+            document.getElementById('lastWorkingDayInput').innerText = todayFormatted;
 
-        if (days < 0) {
-            months--;
-            const prevMonth = new Date(end.getFullYear(), end.getMonth(), 0);
-            days += prevMonth.getDate();
+            calculateAll();
         }
 
-        if (months < 0) {
-            years--;
-            months += 12;
+        window.onload = function() {
+            let currentUser = localStorage.getItem('currentErpUser');
+            if (currentUser) {
+                showDashboard();
+            }
+        };
+
+        function loadUserGreetings() {
+            let currentUser = JSON.parse(localStorage.getItem('currentErpUser'));
+            let name = (currentUser && currentUser.name && currentUser.name.trim() !== '') ? currentUser.name : 'Employee User';
+            let erpNo = (currentUser && currentUser.erpNo) ? currentUser.erpNo : '-';
+            let dojFormatted = (currentUser && currentUser.doj) ? formatDateToDDMMYYYY(currentUser.doj) : '-';
+            let hour = new Date().getHours();
+            let greeting = 'Welcome';
+
+            if (hour < 12) {
+                greeting = '☀ Good Morning';
+            } else if (hour < 17) {
+                greeting = '🌤 Good Afternoon';
+            } else {
+                greeting = '🌙 Good Evening';
+            }
+
+            document.getElementById('greetingTitle').innerText = `${greeting}, ${name}!`;
+            document.getElementById('navUserName').innerText = name.split(' ')[0];
+
+            // Populate User Menu Details
+            document.getElementById('menuProfileName').innerText = name;
+            document.getElementById('menuProfileErp').innerText = erpNo;
+            document.getElementById('menuProfileDoj').innerText = dojFormatted;
+            
+            if (currentUser && currentUser.doj) {
+                document.getElementById('indemnityDoj').innerText = dojFormatted;
+            }
+
+            // Populate Print Header Metadata
+            document.getElementById('printSalaryName').innerText = `Employee Name: ${name}`;
+            document.getElementById('printSalaryErp').innerText = `ERP Number: ${erpNo}`;
+            document.getElementById('printIndemnityName').innerText = `Employee Name: ${name}`;
+            document.getElementById('printIndemnityErp').innerText = `ERP Number: ${erpNo}`;
         }
 
-        const diffTime = Math.abs(end - start);
-        const diffDays = diffTime / (1000 * 60 * 60 * 24) + 1;
-        const exactYears = (diffDays / 365.25).toFixed(2);
+        function initWidgets() {
+            updateDateTime();
+            setInterval(updateDateTime, 1000);
 
-        document.getElementById('years').value = exactYears;
-        window.serviceDurationString = `${years} Years, ${months} Months, ${days} Days (${diffDays} Days)`;
-    }
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    let lat = position.coords.latitude;
+                    let lon = position.coords.longitude;
+                    fetchLocationName(lat, lon);
+                    fetchWeather(lat, lon);
+                }, error => {
+                    document.getElementById('widgetLocation').innerText = 'Dubai, UAE';
+                    document.getElementById('widgetWeather').innerText = '34°C, Sunny';
+                });
+            } else {
+                document.getElementById('widgetLocation').innerText = 'Location unavailable';
+                document.getElementById('widgetWeather').innerText = '32°C, Clear';
+            }
 
-    function calculateSalary() {
-        const empName = document.getElementById('empNameSalary').value || 'N/A';
-        const empErp = document.getElementById('empErpSalary').value || 'N/A';
-        const actualWorkedDays = parseFloat(document.getElementById('basicDaysInput').value) || 0;
-        const monthlySiteAllowance = parseFloat(document.getElementById('siteAllowanceInput').value) || 0;
-        
-        const earnedBasic = (1200 / (totalWorkingDaysInMonth || 26)) * actualWorkedDays;
-        const earnedAllowance = (720 / (totalWorkingDaysInMonth || 26)) * actualWorkedDays;
-        const earnedSiteAllowance = (monthlySiteAllowance / (totalWorkingDaysInMonth || 26)) * actualWorkedDays;
-        
-        const otDays = parseFloat(document.getElementById('otDays').value) || 0;
-        const otRatePerDay = 342 / 26; 
-        const totalOT = otRatePerDay * otDays;
-
-        const holidays = parseFloat(document.getElementById('holidays').value) || 0;
-        const holidayRatePerDay = 73.25;
-        const totalHolidayPay = holidays * holidayRatePerDay;
-
-        const deductionAmount = parseFloat(document.getElementById('deductionInput').value) || 0;
-        const monthSelect = document.getElementById('selectMonth');
-        const year = document.getElementById('selectYear').value;
-
-        if (monthSelect.value === "" || year === "") {
-            alert("Please select both Month and Year first!");
-            return;
+            checkPublicHoliday();
         }
 
-        const monthName = monthsData[monthSelect.value];
-        const grossSalary = earnedBasic + earnedAllowance + earnedSiteAllowance + totalOT + totalHolidayPay;
-        const netSalary = grossSalary - deductionAmount;
+        function updateDateTime() {
+            let now = new Date();
+            let optionsDate = { month: 'short', day: 'numeric', year: 'numeric' };
+            let dateStr = now.toLocaleDateString('en-US', optionsDate);
+            let timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+            document.getElementById('widgetDateTime').innerText = `${dateStr}, ${timeStr}`;
+        }
 
-        document.getElementById('resEmpName').innerText = empName;
-        document.getElementById('resEmpErp').innerText = empErp;
-        document.getElementById('resMonthYear').innerText = `${monthName} ${year}`;
-        document.getElementById('resBasic').innerText = earnedBasic.toFixed(2) + ' د.إ';
-        document.getElementById('resAllowance').innerText = earnedAllowance.toFixed(2) + ' د.إ';
-        document.getElementById('resSiteAllowance').innerText = earnedSiteAllowance.toFixed(2) + ' د.إ';
-        document.getElementById('resOT').innerText = totalOT.toFixed(2) + ' د.إ';
-        document.getElementById('resHoliday').innerText = totalHolidayPay.toFixed(2) + ' د.إ';
-        document.getElementById('resGross').innerText = grossSalary.toFixed(2) + ' د.إ';
-        document.getElementById('resDeduction').innerText = '- ' + deductionAmount.toFixed(2) + ' د.إ';
-        document.getElementById('resTotal').innerText = netSalary.toFixed(2) + ' د.إ';
+        function fetchLocationName(lat, lon) {
+            fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`)
+                .then(res => res.json())
+                .then(data => {
+                    let city = data.address.city || data.address.town || data.address.state || 'Current Location';
+                    let country = data.address.country || '';
+                    document.getElementById('widgetLocation').innerText = `${city}, ${country}`;
+                })
+                .catch(() => {
+                    document.getElementById('widgetLocation').innerText = 'Accurate Location Active';
+                });
+        }
 
-        document.getElementById('resultBoxSalary').style.display = 'block';
-        document.getElementById('printBtnSalary').style.display = 'flex';
-    }
+        function fetchWeather(lat, lon) {
+            fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data && data.current_weather) {
+                        let temp = data.current_weather.temperature;
+                        document.getElementById('widgetWeather').innerText = `${temp}°C, Clear`;
+                    }
+                })
+                .catch(() => {
+                    document.getElementById('widgetWeather').innerText = '32°C, Pleasant';
+                });
+        }
 
-    function calculateSettlement() {
-        const empName = document.getElementById('empNameIndemnity').value || 'N/A';
-        const empErp = document.getElementById('empErpIndemnity').value || 'N/A';
-        const basicSalary = parseFloat(document.getElementById('basicSalary').value) || 0;
-        const grossSalary = parseFloat(document.getElementById('grossSalary').value) || basicSalary;
-        const years = parseFloat(document.getElementById('years').value) || 0;
-        const reason = document.getElementById('reason').value;
-        const leaveDays = parseFloat(document.getElementById('leaveDays').value) || 0;
-        const noticeMonths = parseFloat(document.getElementById('noticeMonths').value) || 0;
+        function checkPublicHoliday() {
+            let now = new Date();
+            let month = now.getMonth() + 1;
+            let day = now.getDate();
+            if (month === 12 && day === 2) {
+                document.getElementById('widgetHoliday').innerText = 'National Day 🎉';
+            } else {
+                document.getElementById('widgetHoliday').innerText = 'No Holiday Today';
+            }
+        }
 
-        let indemnity = 0;
-        if (years >= 1) {
-            let calculationYears = years;
-            if (reason === 'resignation') {
-                if (years < 3) {
-                    calculationYears = 0; 
-                } else if (years >= 3 && years < 5) {
-                    calculationYears = calculationYears * (1 / 3); 
-                } else if (years >= 5 && years < 10) {
-                    calculationYears = calculationYears * (2 / 3); 
+        function getNum(val) {
+            let num = parseFloat(val);
+            return isNaN(num) ? 0 : num;
+        }
+
+        function getCalendarData() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth();
+            const todayDate = now.getDate();
+            const totalDaysInMonth = new Date(year, month + 1, 0).getDate();
+            
+            let totalSundays = 0;
+            let pastSundays = 0;
+
+            for (let d = 1; d <= totalDaysInMonth; d++) {
+                let checkDate = new Date(year, month, d);
+                if (checkDate.getDay() === 0) {
+                    totalSundays++;
+                    if (d <= todayDate) pastSundays++;
                 }
             }
 
-            if (calculationYears <= 5) {
-                indemnity = (basicSalary / 30) * 21 * calculationYears;
-            } else {
-                let firstFiveYearsPay = (basicSalary / 30) * 21 * 5;
-                let remainingYearsPay = (basicSalary / 30) * 30 * (calculationYears - 5);
-                indemnity = firstFiveYearsPay + remainingYearsPay;
-            }
+            const workingDaysTotal = totalDaysInMonth - totalSundays;
+            const pastWorkingDays = todayDate - pastSundays;
+
+            return {
+                totalDays: totalDaysInMonth,
+                workingDaysTotal: workingDaysTotal > 0 ? workingDaysTotal : 1,
+                pastWorkingDays: pastWorkingDays >= 0 ? pastWorkingDays : 0
+            };
         }
 
-        let leaveEncashment = (grossSalary / 30) * leaveDays;
-        let noticeSalary = grossSalary * noticeMonths;
-        let totalPayable = indemnity + leaveEncashment + noticeSalary;
+        function onBasicSalaryChange() {
+            let baseSalaryRate = getNum(document.getElementById('basicSalaryInput').innerText);
+            let suggestedAllowance = baseSalaryRate * 0.60;
+            document.getElementById('securityAllowanceInput').innerText = suggestedAllowance.toFixed(2);
+            calculateAll();
+        }
 
-        document.getElementById('resEmpNameIndemnity').innerText = empName;
-        document.getElementById('resEmpErpIndemnity').innerText = empErp;
-        document.getElementById('serviceDurationText').innerText = window.serviceDurationString || (years + ' Years');
-        document.getElementById('indemnityAmount').innerText = indemnity.toFixed(2) + ' د.إ';
-        document.getElementById('leaveAmount').innerText = leaveEncashment.toFixed(2) + ' د.إ';
-        document.getElementById('noticeAmount').innerText = noticeSalary.toFixed(2) + ' د.إ';
-        document.getElementById('totalAmount').innerText = totalPayable.toFixed(2) + ' د.إ';
+        function calculateAll() {
+            let cal = getCalendarData();
+            
+            let baseSalaryRate = getNum(document.getElementById('basicSalaryInput').innerText);
+            let securityAllowanceRate = getNum(document.getElementById('securityAllowanceInput').innerText);
+            let totalBaseAndAllowance = baseSalaryRate + securityAllowanceRate;
 
-        document.getElementById('resultBoxIndemnity').style.display = 'block';
-        document.getElementById('printBtnIndemnity').style.display = 'flex';
-    }
-</script>
+            let absentDays = getNum(document.getElementById('absentDaysInput').innerText);
+            let effectivePastWorkingDays = cal.pastWorkingDays - absentDays;
+            if (effectivePastWorkingDays < 0) effectivePastWorkingDays = 0;
+            document.getElementById('basicWorkingDaysResult').innerText = effectivePastWorkingDays;
 
+            let dailyRate = totalBaseAndAllowance / cal.workingDaysTotal;
+
+            let basicWorkingDaysSalary = effectivePastWorkingDays * dailyRate;
+            document.getElementById('basicWorkingDaysSalaryResult').innerText = basicWorkingDaysSalary.toFixed(2);
+
+            let basicOtDays = effectivePastWorkingDays;
+            document.getElementById('basicOtDaysResult').innerText = basicOtDays;
+
+            let basicOtSalary = (342 / 26) * basicOtDays; 
+            document.getElementById('basicOtSalaryResult').innerText = basicOtSalary.toFixed(2);
+
+            let weeklyWorkingDaysInput = getNum(document.getElementById('otDaysInput').innerText);
+            let standardTotalBaseAndAllowance = 1200 + 720; 
+            let ratio = totalBaseAndAllowance / standardTotalBaseAndAllowance;
+            let weeklyPerDayRate = 73.25 * ratio; 
+            let weeklySalaryAmount = weeklyWorkingDaysInput * weeklyPerDayRate; 
+            document.getElementById('otResult').innerText = weeklySalaryAmount.toFixed(2);
+
+            let salaryOtTotal = basicWorkingDaysSalary + basicOtSalary + weeklySalaryAmount;
+            document.getElementById('salaryOtTotalResult').innerText = salaryOtTotal.toFixed(2);
+
+            let deduction = getNum(document.getElementById('deductionInput').innerText);
+            let netPayable = salaryOtTotal - deduction;
+            document.getElementById('netPayableResult').innerText = netPayable.toFixed(2);
+
+            // UAE Labour Law Indemnity & Settlement Calculation
+            let currentUser = JSON.parse(localStorage.getItem('currentErpUser'));
+            let dojString = (currentUser && currentUser.doj) ? currentUser.doj : "2024-01-01";
+            document.getElementById('indemnityDoj').innerText = formatDateToDDMMYYYY(dojString);
+
+            let lwdString = document.getElementById('lastWorkingDayInput').innerText.trim();
+            let dojDate = new Date(dojString);
+            let lwdDate = parseDDMMYYYYToDate(lwdString);
+
+            if (isNaN(lwdDate)) {
+                lwdDate = new Date();
+            }
+
+            let diffTime = lwdDate - dojDate;
+            let serviceYears = diffTime / (1000 * 60 * 60 * 24 * 365.25);
+            if (serviceYears < 0) serviceYears = 0;
+
+            document.getElementById('indemnityServiceYears').innerText = serviceYears.toFixed(2);
+            document.getElementById('indemnityServiceMonths').innerText = (serviceYears * 12).toFixed(2);
+            document.getElementById('indemnityServiceDays').innerText = Math.round(diffTime / (1000 * 60 * 60 * 24));
+
+            let basicSalaryForGratuity = baseSalaryRate > 0 ? baseSalaryRate : 1200;
+            let dailyBasicWage = basicSalaryForGratuity / 30;
+            let gratuityAmount = 0;
+            let totalIndemnityDays = 0;
+
+            if (serviceYears >= 1) {
+                if (serviceYears <= 5) {
+                    totalIndemnityDays = 21 * serviceYears;
+                } else {
+                    let firstFiveYearsDays = 21 * 5;
+                    let remainingYears = serviceYears - 5;
+                    let extraYearsDays = 30 * remainingYears;
+                    totalIndemnityDays = firstFiveYearsDays + extraYearsDays;
+                }
+
+                gratuityAmount = dailyBasicWage * totalIndemnityDays;
+
+                let maxCap = basicSalaryForGratuity * 24;
+                if (gratuityAmount > maxCap) {
+                    gratuityAmount = maxCap;
+                    totalIndemnityDays = 720;
+                }
+            } else {
+                totalIndemnityDays = 0;
+                gratuityAmount = 0;
+            }
+
+            document.getElementById('totalIndemnityDaysResult').innerText = totalIndemnityDays.toFixed(2);
+            document.getElementById('gratuityAmountResult').innerText = gratuityAmount.toFixed(2);
+
+            let balanceLeaveDays = getNum(document.getElementById('balanceLeaveDaysInput').innerText);
+            let balanceLeaveSalary = balanceLeaveDays * dailyBasicWage;
+            document.getElementById('balanceLeaveSalaryResult').innerText = balanceLeaveSalary.toFixed(2);
+
+            let noticeMonths = getNum(document.getElementById('noticePeriodInput').innerText);
+            let noticePeriodAmount = noticeMonths * (baseSalaryRate + securityAllowanceRate + 342);
+
+            let emergencyResignVal = document.getElementById('emergencyResignSelect').value;
+
+            let totalIndemnityAmount = gratuityAmount + balanceLeaveSalary;
+
+            if (emergencyResignVal === "Yes") {
+                totalIndemnityAmount -= baseSalaryRate;
+            } else {
+                totalIndemnityAmount += noticePeriodAmount;
+            }
+
+            document.getElementById('totalIndemnityResult').innerText = totalIndemnityAmount.toFixed(2);
+        }
+
+        // Custom Dynamic Document Title Setter for PDF Name during Print
+        function printSalarySlip() {
+            let currentUser = JSON.parse(localStorage.getItem('currentErpUser'));
+            let userName = (currentUser && currentUser.name) ? currentUser.name.replace(/[^a-zA-Z0-9]/g, '_') : 'Employee';
+            
+            const now = new Date();
+            let monthName = now.toLocaleString('en-US', { month: 'long' });
+            let yearNum = now.getFullYear();
+
+            document.title = `${userName}_${monthName}_${yearNum}_PaySlip`;
+
+            document.querySelectorAll('.print-section').forEach(el => {
+                el.classList.remove('active-print');
+                el.style.display = 'none';
+            });
+            let salaryWrap = document.getElementById('salaryPrintWrapper');
+            salaryWrap.classList.add('active-print');
+            salaryWrap.style.display = 'block';
+            
+            window.print();
+        }
+
+        function printIndemnityStatement() {
+            let currentUser = JSON.parse(localStorage.getItem('currentErpUser'));
+            let userName = (currentUser && currentUser.name) ? currentUser.name.replace(/[^a-zA-Z0-9]/g, '_') : 'Employee';
+
+            document.title = `${userName}_Indemnity_statements`;
+
+            document.querySelectorAll('.print-section').forEach(el => {
+                el.classList.remove('active-print');
+                el.style.display = 'none';
+            });
+            let indemnityWrap = document.getElementById('indemnityPrintWrapper');
+            indemnityWrap.classList.add('active-print');
+            indemnityWrap.style.display = 'block';
+            
+            window.print();
+        }
+    </script>
 </body>
 </html>
